@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Опрос | Мнение</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #f5f7fa 0%, #e9edf5 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .poll-card {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 48px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 60px rgba(0, 20, 40, 0.15), 
+                  0 8px 24px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #0b1a2f;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subhead {
+      color: #3d5068;
+      font-size: 1rem;
+      font-weight: 400;
+      border-left: 4px solid #4f7df3;
+      padding-left: 16px;
+      margin-bottom: 28px;
+      opacity: 0.8;
+    }
+
+    .question {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0f263b;
+      margin-bottom: 28px;
+      line-height: 1.4;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed #cdd9ed;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      padding: 14px 20px;
+      border-radius: 100px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e2eaf5;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .option-item:hover {
+      border-color: #8aa7f0;
+      background: #f8fbff;
+      box-shadow: 0 6px 14px rgba(52, 94, 200, 0.08);
+      transform: scale(1.01);
+    }
+
+    .option-item.selected {
+      border-color: #2f66e0;
+      background: #ecf2fe;
+      box-shadow: 0 0 0 3px rgba(47, 102, 224, 0.15);
+    }
+
+    .option-item input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #b7c8e0;
+      border-radius: 50%;
+      margin: 0;
+      flex-shrink: 0;
+      background: white;
+      transition: 0.1s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .option-item input[type="radio"]:checked {
+      border-color: #2f66e0;
+      background: #2f66e0;
+      box-shadow: inset 0 0 0 5px white, 0 0 0 2px #2f66e0;
+    }
+
+    .option-item label {
+      flex: 1;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #1d334b;
+      cursor: pointer;
+      padding: 4px 0;
+      letter-spacing: -0.2px;
+    }
+
+    .vote-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .vote-bar {
+      width: 100px;
+      height: 6px;
+      background: #dce5f0;
+      border-radius: 40px;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .vote-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b79f0, #6b9aff);
+      border-radius: 40px;
+      width: 0%;
+      transition: width 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
+    }
+
+    .vote-percent {
+      min-width: 44px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1f3b5c;
+      text-align: right;
+      letter-spacing: 0.2px;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #d3e0f0;
+    }
+
+    .btn {
+      background: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1c3652;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      border: 1px solid #d0def0;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      background: #ffffff;
+    }
+
+    .btn-primary {
+      background: #1f4fcf;
+      border: 1px solid #1f4fcf;
+      color: white;
+      box-shadow: 0 6px 18px rgba(31, 79, 207, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #1a44b0;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(31, 79, 207, 0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: #c5d5eb;
+    }
+
+    .btn-secondary:hover {
+      background: #eef5ff;
+      border-color: #8aa7f0;
+    }
+
+    .reset-area {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .vote-count {
+      font-size: 0.9rem;
+      color: #4a6180;
+      background: #e9f0fa;
+      padding: 6px 18px;
+      border-radius: 60px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .status-message {
+      margin-top: 18px;
+      padding: 12px 16px;
+      border-radius: 32px;
+      background: #e7eefb;
+      color: #20447a;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid #c7daf5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-message span:last-child {
+      font-weight: 400;
+      opacity: 0.8;
+      font-size: 0.85rem;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #5b7395;
+      text-align: center;
+      opacity: 0.7;
+      letter-spacing: 0.2px;
+    }
+
+    @media (max-width: 500px) {
+      .poll-card { padding: 28px 18px; }
+      h1 { font-size: 1.7rem; }
+      .option-item { padding: 12px 14px; border-radius: 40px; }
+      .vote-bar { width: 70px; }
+      .action-bar { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .reset-area { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="poll-card" role="main">
+    <h1>
+      <span>📊</span> Опрос
+    </h1>
+    <div class="subhead">Ваше мнение формирует результат</div>
+
+    <div class="question" id="questionText">Какой язык программирования вы предпочитаете?</div>
+
+    <div class="options" id="optionsContainer">
+      <!-- динамически из js -->
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-primary" id="voteBtn">✅ Проголосовать</button>
+      <div class="reset-area">
+        <button class="btn btn-secondary" id="resetBtn">⟳ Сбросить</button>
+        <span class="vote-count" id="totalVotes">0 голосов</span>
+      </div>
+    </div>
+
+    <div id="statusMessage" class="status-message">
+      <span>💡 Выберите вариант и нажмите «Проголосовать»</span>
+      <span id="selectedHint">—</span>
+    </div>
+    <div class="footer-note">• данные хранятся локально •</div>
+  </div>
+
+  <script>
+    (function() {
+      // --- Данные опроса ---
+      const POLL_KEY = 'poll_data_v1';
+      const defaultOptions = [
+        { id: 'js', label: 'JavaScript / TypeScript' },
+        { id: 'python', label: 'Python' },
+        { id: 'java', label: 'Java / Kotlin' },
+        { id: 'csharp', label: 'C# / .NET' },
+        { id: 'golang', label: 'Go' },
+        { id: 'rust', label: 'Rust' },
+      ];
+
+      // Состояние
+      let options = [];              // массив { id, label, votes }
+      let selectedId = null;        // id выбранного варианта
+      let totalVotes = 0;
+
+      // DOM элементы
+      const optionsContainer = document.getElementById('optionsContainer');
+      const questionText = document.getElementById('questionText');
+      const voteBtn = document.getElementById('voteBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const totalVotesSpan = document.getElementById('totalVotes');
+      const statusMsg = document.getElementById('statusMessage');
+      const selectedHint = document.getElementById('selectedHint');
+
+      // --- Загрузка / инициализация ---
+      function loadPollData() {
+        const stored = localStorage.getItem(POLL_KEY);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              // проверяем, что все обязательные поля есть
+              const valid = parsed.every(item => item.id && typeof item.label === 'string' && typeof item.votes === 'number');
+              if (valid) {
+                options = parsed;
+                return;
+              }
+            }
+          } catch (e) { /* игнорируем */ }
+        }
+        // инициализация по умолчанию
+        options = defaultOptions.map(opt => ({
+          ...opt,
+          votes: 0,
+        }));
+        savePollData();
+      }
+
+      function savePollData() {
+        localStorage.setItem(POLL_KEY, JSON.stringify(options));
+      }
+
+      // --- Подсчёт голосов ---
+      function recalcTotal() {
+        totalVotes = options.reduce((sum, opt) => sum + opt.votes, 0);
+        return totalVotes;
+      }
+
+      // --- Отрисовка ---
+      function render() {
+        recalcTotal();
+        // обновить контейнер опций
+        optionsContainer.innerHTML = '';
+        options.forEach((opt, index) => {
+          const percent = totalVotes === 0 ? 0 : (opt.votes / totalVotes) * 100;
+          const isSelected = (selectedId === opt.id);
+
+          const itemDiv = document.createElement('div');
+          itemDiv.className = `option-item${isSelected ? ' selected' : ''}`;
+          itemDiv.dataset.id = opt.id;
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'pollOption';
+          radio.value = opt.id;
+          radio.checked = isSelected;
+          radio.id = `opt_${opt.id}`;
+
+          const label = document.createElement('label');
+          label.htmlFor = `opt_${opt.id}`;
+          label.textContent = opt.label;
+
+          const barContainer = document.createElement('div');
+          barContainer.className = 'vote-bar-container';
+
+          const bar = document.createElement('div');
+          bar.className = 'vote-bar';
+          const fill = document.createElement('div');
+          fill.className = 'vote-fill';
+          fill.style.width = `${percent}%`;
+          bar.appendChild(fill);
+
+          const percentSpan = document.createElement('span');
+          percentSpan.className = 'vote-percent';
+          percentSpan.textContent = totalVotes === 0 ? '0%' : `${Math.round(percent)}%`;
+
+          barContainer.appendChild(bar);
+          barContainer.appendChild(percentSpan);
+
+          itemDiv.appendChild(radio);
+          itemDiv.appendChild(label);
+          itemDiv.appendChild(barContainer);
+
+          // событие выбора по клику на всю строку (кроме клика по радио, но radio сработает отдельно)
+          itemDiv.addEventListener('click', (e) => {
+            // если клик был по радио — оно само установит checked, но мы обработаем через change
+            // чтобы избежать двойного срабатывания, проверим, что клик не по radio
+            if (e.target.tagName !== 'INPUT') {
+              const radioInput = itemDiv.querySelector('input[type="radio"]');
+              if (radioInput) {
+                radioInput.checked = true;
+                // вручную вызываем событие change для единообразия
+                const changeEvent = new Event('change', { bubbles: true });
+                radioInput.dispatchEvent(changeEvent);
+              }
+            }
+          });
+
+          // слушаем change на радио
+          radio.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              // снимаем выделение со всех
+              document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+              itemDiv.classList.add('selected');
+              selectedId = opt.id;
+              // обновить подсказку
+              selectedHint.textContent = `✅ «${opt.label}»`;
+              // включить кнопку
+              voteBtn.disabled = false;
+              // обновить статус
+              statusMsg.querySelector('span:first-child').textContent = '📌 Выбран вариант. Нажмите «Проголосовать»';
+            }
+          });
+
+          optionsContainer.appendChild(itemDiv);
+        });
+
+        // Обновить общее количество голосов
+        totalVotesSpan.textContent = `${totalVotes} ${totalVotes % 10 === 1 && totalVotes % 100 !== 11 ? 'голос' : totalVotes % 10 >= 2 && totalVotes % 10 <= 4 && (totalVotes % 100 < 10 || totalVotes % 100 >= 20) ? 'голоса' : 'голосов'}`;
+
+        // Если нет выбранного, заблокировать кнопку
+        if (!selectedId) {
+          voteBtn.disabled = true;
+          selectedHint.textContent = '—';
+        } else {
+          // проверим, существует ли ещё выбранный id (может быть удалён при сбросе)
+          const stillExists = options.some(opt => opt.id === selectedId);
+          if (!stillExists) {
+            selectedId = null;
+            voteBtn.disabled = true;
+            selectedHint.textContent = '—';
+            statusMsg.querySelector('span:first-child').textContent = '💡 Выберите вариант и нажмите «Проголосовать»';
+          } else {
+            // найти label для подсказки
+            const found = options.find(opt => opt.id === selectedId);
+            if (found) selectedHint.textContent = `✅ «${found.label}»`;
+          }
+        }
+
+        // если голосов 0 — показываем специальный статус
+        if (totalVotes === 0) {
+          statusMsg.querySelector('span:first-child').textContent = '💡 Пока нет голосов. Выберите вариант!';
+        } else if (selectedId) {
+          statusMsg.querySelector('span:first-child').textContent = '📌 Ваш голос учтён (или выбран вариант)';
+        } else {
+          statusMsg.querySelector('span:first-child').textContent = '💡 Выберите вариант и нажмите «Проголосовать»';
+        }
+
+        // Сохранить
+        savePollData();
+      }
+
+      // --- Голосование ---
+      function handleVote() {
+        if (!selectedId) {
+          voteBtn.disabled = true;
+          return;
+        }
+        // найти опцию
+        const target = options.find(opt => opt.id === selectedId);
+        if (!target) {
+          // если не найден — сбросить выбор
+          selectedId = null;
+          render();
+          return;
+        }
+
+        // увеличить голоса
+        target.votes += 1;
+        // сбросить выбор (чтобы можно было голосовать снова за другой вариант)
+        // но оставим выбранным текущий для удобства
+        // однако снимаем выделение у всех радио, но оставляем selectedId для отображения
+        // чтобы после голосования не блокировать кнопку 
+        // но мы хотим, чтобы после голосования можно было выбрать другой вариант
+        // поэтому сбрасываем selectedId, но оставляем визуальное выделение?
+        // Лучше: после голосования сбросить выделение радио и selectedId = null
+        // чтобы пользователь мог выбрать новый вариант.
+        // Но учтём: мы хотим показывать процент после голосования.
+        // Поэтому: голосуем, перерисовываем, но radio не выбраны.
+        // Сбрасываем selectedId
+        selectedId = null;
+        // снять все checked
+        document.querySelectorAll('input[name="pollOption"]').forEach(r => r.checked = false);
+        document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+        voteBtn.disabled = true;
+        selectedHint.textContent = '—';
+        statusMsg.querySelector('span:first-child').textContent = '✅ Голос учтён! Выберите другой вариант или сбросьте.';
+
+        render(); // перерисовка с новыми данными
+      }
+
+      // --- Сброс ---
+      function handleReset() {
+        if (totalVotes === 0) {
+          // если голосов нет, но можно сбросить выбор
+          selectedId = null;
+          document.querySelectorAll('input[name="pollOption"]').forEach(r => r.checked = false);
+          document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+          voteBtn.disabled = true;
+          selectedHint.textContent = '—';
+          statusMsg.querySelector('span:first-child').textContent = '💡 Выберите вариант';
+          render();
+          return;
+        }
+
+        // Подтверждение
+        if (confirm('Сбросить все голоса? Это действие необратимо.')) {
+          options = options.map(opt => ({ ...opt, votes: 0 }));
+          selectedId = null;
+          document.querySelectorAll('input[name="pollOption"]').forEach(r => r.checked = false);
+          document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+          voteBtn.disabled = true;
+          selectedHint.textContent = '—';
+          statusMsg.querySelector('span:first-child').textContent = '🔄 Голоса обнулены. Выберите вариант.';
+          render();
+        }
+      }
+
+      // --- Инициализация ---
+      function init() {
+        loadPollData();
+        render();
+        // обработчики
+        voteBtn.addEventListener('click', handleVote);
+        resetBtn.addEventListener('click', handleReset);
+        // дополнительно: если вдруг клик по радио вне item — всё уже обработано
+        // также можно добавить обработку на change для всех radio (уже есть)
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
