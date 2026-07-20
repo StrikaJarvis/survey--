@@ -4,13 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shield Awards · Голосование</title>
-  <!-- Современный шрифт -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
     /* --------------------------------------------
-       Базовый сброс и переменные
+       Базовый сброс, переменные, фон
     -------------------------------------------- */
     * {
       margin: 0;
@@ -19,18 +18,17 @@
     }
 
     :root {
-      --bg: #f5f5f7;
-      --card-bg: #ffffff;
-      --text-primary: #1a1a1a;
-      --text-secondary: #555555;
-      --text-muted: #888888;
-      --border-light: #e0e0e0;
-      --border-focus: #333333;
-      --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.06);
-      --shadow-btn: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --radius: 24px;
+      --bg: #0a0a0a;
+      --card-bg: rgba(20, 20, 24, 0.85);
+      --text-primary: #f0f0f0;
+      --text-secondary: #b0b0b0;
+      --text-muted: #777777;
+      --border-light: rgba(255, 255, 255, 0.08);
+      --border-focus: #ffffff;
+      --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.8);
+      --radius: 28px;
       --radius-sm: 40px;
-      --transition: 0.2s ease;
+      --transition: 0.25s ease;
     }
 
     body {
@@ -43,17 +41,57 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-primary);
       line-height: 1.5;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ---------- Эндер-столбы (фон) ---------- */
+    .ender-pillars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .pillar {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to top, rgba(255, 255, 255, 0.0) 0%, rgba(220, 220, 255, 0.25) 60%, rgba(255, 255, 255, 0.6) 90%, rgba(255, 255, 255, 0.9) 100%);
+      border-radius: 2px;
+      animation: glowPulse 3s infinite alternate ease-in-out;
+      transform-origin: bottom;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.1), 0 0 30px rgba(200, 200, 255, 0.05);
+    }
+
+    /* Каждый столб будет иметь свой размер, позицию и задержку */
+    .pillar:nth-child(odd) { animation-duration: 4s; }
+    .pillar:nth-child(3n) { animation-duration: 5s; animation-delay: 0.5s; }
+    .pillar:nth-child(5n+2) { animation-duration: 3.5s; animation-delay: 1s; }
+    .pillar:nth-child(7n+4) { animation-duration: 6s; animation-delay: 0.2s; }
+
+    @keyframes glowPulse {
+      0% { opacity: 0.3; filter: brightness(0.6); }
+      100% { opacity: 1; filter: brightness(1.2); }
     }
 
     /* ---------- Карточка опроса ---------- */
     .poll-wrapper {
+      position: relative;
+      z-index: 1;
       max-width: 820px;
       width: 100%;
       background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: var(--radius);
       padding: 40px 36px 32px;
       box-shadow: var(--shadow-card);
-      transition: box-shadow 0.3s;
+      border: 1px solid var(--border-light);
     }
 
     /* ---------- Шапка ---------- */
@@ -67,13 +105,13 @@
     }
 
     .header .shield {
-      font-size: 2.4rem;
+      font-size: 2.6rem;
       line-height: 1;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
     .header h1 {
-      font-size: 1.9rem;
+      font-size: 2.0rem;
       font-weight: 700;
       letter-spacing: -0.5px;
       color: var(--text-primary);
@@ -82,12 +120,13 @@
     .header .year {
       font-size: 0.9rem;
       font-weight: 600;
-      background: #eaeaea;
+      background: rgba(255, 255, 255, 0.06);
       padding: 4px 16px;
       border-radius: 40px;
       color: var(--text-secondary);
       margin-left: auto;
       letter-spacing: 0.3px;
+      border: 1px solid var(--border-light);
     }
 
     /* ---------- Навигация ---------- */
@@ -95,10 +134,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg);
+      background: rgba(255, 255, 255, 0.04);
       padding: 6px 6px 6px 20px;
       border-radius: var(--radius-sm);
       margin: 4px 0 24px;
+      border: 1px solid var(--border-light);
     }
 
     .nav-bar .nav-btn {
@@ -116,12 +156,12 @@
     }
 
     .nav-bar .nav-btn:hover:not(:disabled) {
-      background: #d0d0d0;
-      color: #000;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
     }
 
     .nav-bar .nav-btn:disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       pointer-events: none;
     }
 
@@ -148,7 +188,7 @@
     .question-block .nomination-sub {
       font-size: 1rem;
       color: var(--text-secondary);
-      border-left: 3px solid #ccc;
+      border-left: 3px solid rgba(255, 255, 255, 0.2);
       padding-left: 16px;
       font-weight: 400;
     }
@@ -165,7 +205,7 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      background: var(--bg);
+      background: rgba(255, 255, 255, 0.04);
       padding: 14px 20px;
       border-radius: var(--radius-sm);
       border: 1.5px solid transparent;
@@ -174,14 +214,14 @@
     }
 
     .candidate-item:hover {
-      background: #ececec;
-      border-color: #ccc;
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     .candidate-item.selected {
-      background: #f0f0f0;
-      border-color: var(--text-primary);
-      box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.02);
     }
 
     .candidate-item input[type="radio"] {
@@ -189,19 +229,19 @@
       -webkit-appearance: none;
       width: 22px;
       height: 22px;
-      border: 2px solid #b0b0b0;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       flex-shrink: 0;
-      background: #fff;
+      background: transparent;
       transition: 0.15s;
       position: relative;
       cursor: pointer;
     }
 
     .candidate-item input[type="radio"]:checked {
-      border-color: #000;
-      background: #000;
-      box-shadow: inset 0 0 0 6px #fff, 0 0 0 1px #000;
+      border-color: #fff;
+      background: #fff;
+      box-shadow: inset 0 0 0 6px #0a0a0a, 0 0 0 1px #fff;
     }
 
     .candidate-item label {
@@ -217,7 +257,7 @@
     .results-block {
       margin: 20px 0 18px;
       padding: 16px 18px;
-      background: var(--bg);
+      background: rgba(255, 255, 255, 0.04);
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-light);
     }
@@ -227,7 +267,7 @@
       align-items: center;
       gap: 14px;
       padding: 6px 0;
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .result-row:last-child {
@@ -244,14 +284,14 @@
     .result-row .bar-wrapper {
       flex: 1;
       height: 8px;
-      background: #d8d8d8;
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 40px;
       overflow: hidden;
     }
 
     .result-row .bar-fill {
       height: 100%;
-      background: #222;
+      background: #d0d0d0;
       border-radius: 40px;
       width: 0%;
       transition: width 0.4s ease;
@@ -288,21 +328,21 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: #f0f0f0;
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text-primary);
-      border: 1.5px solid transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .btn-primary {
-      background: #1a1a1a;
-      color: #fff;
-      box-shadow: var(--shadow-btn);
+      background: #ffffff;
+      color: #0a0a0a;
+      border-color: #ffffff;
     }
 
     .btn-primary:hover:not(:disabled) {
-      background: #000;
+      background: #e0e0e0;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
     }
 
     .btn-primary:active:not(:disabled) {
@@ -310,26 +350,26 @@
     }
 
     .btn-primary:disabled {
-      opacity: 0.4;
+      opacity: 0.3;
       pointer-events: none;
     }
 
     .btn-secondary {
       background: transparent;
-      border-color: #ccc;
+      border-color: rgba(255, 255, 255, 0.15);
       color: var(--text-secondary);
     }
 
     .btn-secondary:hover {
-      background: #eaeaea;
-      border-color: #999;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .vote-count {
       font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-secondary);
-      background: var(--bg);
+      background: rgba(255, 255, 255, 0.04);
       padding: 6px 20px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-light);
@@ -339,7 +379,7 @@
     .status-message {
       margin-top: 22px;
       padding: 14px 20px;
-      background: var(--bg);
+      background: rgba(255, 255, 255, 0.03);
       border-radius: var(--radius-sm);
       color: var(--text-secondary);
       font-weight: 500;
@@ -373,7 +413,7 @@
     @media (max-width: 600px) {
       .poll-wrapper { padding: 24px 16px; }
       .header h1 { font-size: 1.5rem; }
-      .header .shield { font-size: 1.8rem; }
+      .header .shield { font-size: 2rem; }
       .nav-bar { flex-wrap: wrap; justify-content: center; gap: 6px; }
       .candidate-item { padding: 12px 16px; }
       .candidate-item label { font-size: 0.95rem; }
@@ -387,34 +427,32 @@
 </head>
 <body>
 
+<!-- Фоновые эндер-столбы (генерируются через JS) -->
+<div class="ender-pillars" id="pillarsContainer"></div>
+
+<!-- Основная карточка -->
 <div class="poll-wrapper">
-  <!-- Шапка -->
   <div class="header">
     <span class="shield">⚔</span>
     <h1>Shield Awards</h1>
     <span class="year">2026</span>
   </div>
 
-  <!-- Навигация -->
   <div class="nav-bar">
     <button class="nav-btn" id="prevNomBtn">‹</button>
-    <span class="nomination-counter" id="nomCounter">1 / 5</span>
+    <span class="nomination-counter" id="nomCounter">1 / 10</span>
     <button class="nav-btn" id="nextNomBtn">›</button>
   </div>
 
-  <!-- Вопрос -->
   <div class="question-block">
     <div class="nomination-title" id="nomTitle">🏆 Номинация</div>
     <div class="nomination-sub" id="nomSub">Выберите одного кандидата</div>
   </div>
 
-  <!-- Кандидаты -->
   <div class="candidates" id="candidatesContainer"></div>
 
-  <!-- Результаты -->
   <div class="results-block" id="resultsBlock" style="display: none;"></div>
 
-  <!-- Действия -->
   <div class="action-bar">
     <button class="btn btn-primary" id="voteBtn">Голосовать</button>
     <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -423,7 +461,6 @@
     </div>
   </div>
 
-  <!-- Статус -->
   <div class="status-message">
     <span id="statusText">💡 Выберите кандидата и нажмите «Голосовать»</span>
     <span class="hint" id="selectedHint">—</span>
@@ -433,262 +470,310 @@
 </div>
 
 <script>
-  (function() {
-    // ============================================================
-    //  НОМИНАЦИИ (отредактируйте под себя)
-    // ============================================================
-    const NOMINATIONS = [
-      {
-        id: 'best_player',
-        title: '🏅 Лучший игрок сезона',
-        subtitle: 'Кто показал наилучшую игру?',
-        candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro']
-      },
-      {
-        id: 'best_builder',
-        title: '🏗️ Лучший строитель',
-        subtitle: 'Чьи постройки впечатлили всех?',
-        candidates: ['PixelArtisan', 'BlockWizard', 'MegaBuild', 'ArchitectFox']
-      },
-      {
-        id: 'best_pvp',
-        title: '⚔️ Лучший PvP-игрок',
-        subtitle: 'Кто сильнейший на арене?',
-        candidates: ['KillerBee', 'PvPKing', 'ArenaMaster', 'StrikerX']
-      },
-      {
-        id: 'best_event',
-        title: '🎉 Лучший ивент сезона',
-        subtitle: 'Какое событие вам запомнилось?',
-        candidates: ['Охота на дракона', 'Турнир лучников', 'Постройка города', 'Новогодний карнавал']
-      },
-      {
-        id: 'best_art',
-        title: '🎨 Человек искусства',
-        subtitle: 'Кто создал самый красивый арт?',
-        candidates: ['ArtMage', 'PixelPainter', 'SketchMaster', 'ColorWeaver']
-      }
-    ];
+  // ============================================================
+  //  1. Генерация эндер-столбов
+  // ============================================================
+  (function createPillars() {
+    const container = document.getElementById('pillarsContainer');
+    const count = 14; // количество столбов
+    for (let i = 0; i < count; i++) {
+      const pillar = document.createElement('div');
+      pillar.className = 'pillar';
+      const left = Math.random() * 100; // %
+      const height = 30 + Math.random() * 70; // % от высоты экрана
+      const width = 1.5 + Math.random() * 3; // px
+      const delay = (Math.random() * 5).toFixed(2);
+      const duration = 3 + Math.random() * 4;
+      pillar.style.left = left + '%';
+      pillar.style.height = height + '%';
+      pillar.style.width = width + 'px';
+      pillar.style.animationDelay = delay + 's';
+      pillar.style.animationDuration = duration + 's';
+      // случайный разброс по яркости
+      const opacity = 0.3 + Math.random() * 0.7;
+      pillar.style.setProperty('--pillar-opacity', opacity);
+      container.appendChild(pillar);
+    }
+  })();
 
-    // ============================================================
-    //  СОСТОЯНИЕ
-    // ============================================================
-    let currentNomIndex = 0;
-    let selectedCandidateId = null;
-    let votes = {};
-    const STORAGE_KEY = 'shield_awards_votes';
+  // ============================================================
+  //  2. НОМИНАЦИИ (теперь 10 штук)
+  // ============================================================
+  const NOMINATIONS = [
+    {
+      id: 'best_player',
+      title: '🏅 Лучший игрок сезона',
+      subtitle: 'Кто показал наилучшую игру?',
+      candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro']
+    },
+    {
+      id: 'best_builder',
+      title: '🏗️ Лучший строитель',
+      subtitle: 'Чьи постройки впечатлили всех?',
+      candidates: ['PixelArtisan', 'BlockWizard', 'MegaBuild', 'ArchitectFox']
+    },
+    {
+      id: 'best_pvp',
+      title: '⚔️ Лучший PvP-игрок',
+      subtitle: 'Кто сильнейший на арене?',
+      candidates: ['KillerBee', 'PvPKing', 'ArenaMaster', 'StrikerX']
+    },
+    {
+      id: 'best_event',
+      title: '🎉 Лучший ивент сезона',
+      subtitle: 'Какое событие вам запомнилось?',
+      candidates: ['Охота на дракона', 'Турнир лучников', 'Постройка города', 'Новогодний карнавал']
+    },
+    {
+      id: 'best_art',
+      title: '🎨 Человек искусства',
+      subtitle: 'Кто создал самый красивый арт?',
+      candidates: ['ArtMage', 'PixelPainter', 'SketchMaster', 'ColorWeaver']
+    },
+    {
+      id: 'best_streamer',
+      title: '📺 Лучший стример',
+      subtitle: 'Кто транслировал самые яркие моменты?',
+      candidates: ['StreamGod', 'VoxelLive', 'MineCaster', 'LunarTV']
+    },
+    {
+      id: 'best_admin',
+      title: '🛡️ Лучший администратор',
+      subtitle: 'Кто внёс наибольший вклад в порядок?',
+      candidates: ['Admin_Prime', 'GuardianX', 'CraftManager', 'RuleKeeper']
+    },
+    {
+      id: 'best_pve',
+      title: '🧟 Лучший PvE-игрок',
+      subtitle: 'Кто покорял данжи и боссов?',
+      candidates: ['DungeonCrawler', 'BossSlayer', 'MobMaster', 'RaidLeader']
+    },
+    {
+      id: 'best_noob',
+      title: '🌱 Лучший новичок',
+      subtitle: 'Кто быстро вырос и впечатлил?',
+      candidates: ['NewbiePro', 'FreshStart', 'RookieStar', 'BeginnerKing']
+    },
+    {
+      id: 'best_project',
+      title: '📐 Лучший проект',
+      subtitle: 'Какое коллективное творение достойно награды?',
+      candidates: ['Подземный город', 'Летающий остров', 'Аквапарк', 'Храм солнца']
+    }
+  ];
 
-    const nomTitle = document.getElementById('nomTitle');
-    const nomSub = document.getElementById('nomSub');
-    const candidatesContainer = document.getElementById('candidatesContainer');
-    const resultsBlock = document.getElementById('resultsBlock');
-    const voteBtn = document.getElementById('voteBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const prevNomBtn = document.getElementById('prevNomBtn');
-    const nextNomBtn = document.getElementById('nextNomBtn');
-    const nomCounter = document.getElementById('nomCounter');
-    const totalVotesSpan = document.getElementById('totalVotes');
-    const statusText = document.getElementById('statusText');
-    const selectedHint = document.getElementById('selectedHint');
+  // ============================================================
+  //  3. Логика голосования (как раньше)
+  // ============================================================
+  let currentNomIndex = 0;
+  let selectedCandidateId = null;
+  let votes = {};
+  const STORAGE_KEY = 'shield_awards_votes';
 
-    // Загрузка / сохранение
-    function loadVotes() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          let valid = true;
-          for (const nom of NOMINATIONS) {
-            if (!Array.isArray(parsed[nom.id]) || parsed[nom.id].length !== nom.candidates.length) {
-              valid = false;
-              break;
-            }
+  const nomTitle = document.getElementById('nomTitle');
+  const nomSub = document.getElementById('nomSub');
+  const candidatesContainer = document.getElementById('candidatesContainer');
+  const resultsBlock = document.getElementById('resultsBlock');
+  const voteBtn = document.getElementById('voteBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const prevNomBtn = document.getElementById('prevNomBtn');
+  const nextNomBtn = document.getElementById('nextNomBtn');
+  const nomCounter = document.getElementById('nomCounter');
+  const totalVotesSpan = document.getElementById('totalVotes');
+  const statusText = document.getElementById('statusText');
+  const selectedHint = document.getElementById('selectedHint');
+
+  function loadVotes() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        let valid = true;
+        for (const nom of NOMINATIONS) {
+          if (!Array.isArray(parsed[nom.id]) || parsed[nom.id].length !== nom.candidates.length) {
+            valid = false;
+            break;
           }
-          if (valid) { votes = parsed; return; }
-        } catch (e) {}
-      }
-      votes = {};
-      for (const nom of NOMINATIONS) {
-        votes[nom.id] = new Array(nom.candidates.length).fill(0);
-      }
-      saveVotes();
+        }
+        if (valid) { votes = parsed; return; }
+      } catch (e) {}
     }
-    function saveVotes() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+    votes = {};
+    for (const nom of NOMINATIONS) {
+      votes[nom.id] = new Array(nom.candidates.length).fill(0);
     }
+    saveVotes();
+  }
+  function saveVotes() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+  }
 
-    function getCurrentNom() { return NOMINATIONS[currentNomIndex]; }
-    function getCurrentVotes() {
-      const nom = getCurrentNom();
-      return votes[nom.id] || new Array(nom.candidates.length).fill(0);
-    }
-    function getTotalVotesForCurrent() {
-      return getCurrentVotes().reduce((s, v) => s + v, 0);
-    }
+  function getCurrentNom() { return NOMINATIONS[currentNomIndex]; }
+  function getCurrentVotes() {
+    const nom = getCurrentNom();
+    return votes[nom.id] || new Array(nom.candidates.length).fill(0);
+  }
+  function getTotalVotesForCurrent() {
+    return getCurrentVotes().reduce((s, v) => s + v, 0);
+  }
 
-    // Отрисовка
-    function render() {
-      const nom = getCurrentNom();
-      const currentVotes = getCurrentVotes();
-      const total = getTotalVotesForCurrent();
+  function render() {
+    const nom = getCurrentNom();
+    const currentVotes = getCurrentVotes();
+    const total = getTotalVotesForCurrent();
 
-      nomTitle.textContent = nom.title;
-      nomSub.textContent = nom.subtitle;
-      nomCounter.textContent = `${currentNomIndex + 1} / ${NOMINATIONS.length}`;
-      prevNomBtn.disabled = (currentNomIndex === 0);
-      nextNomBtn.disabled = (currentNomIndex === NOMINATIONS.length - 1);
+    nomTitle.textContent = nom.title;
+    nomSub.textContent = nom.subtitle;
+    nomCounter.textContent = `${currentNomIndex + 1} / ${NOMINATIONS.length}`;
+    prevNomBtn.disabled = (currentNomIndex === 0);
+    nextNomBtn.disabled = (currentNomIndex === NOMINATIONS.length - 1);
 
-      // Кандидаты
-      candidatesContainer.innerHTML = '';
-      nom.candidates.forEach((candidate, idx) => {
-        const isSelected = (selectedCandidateId === idx);
-        const item = document.createElement('div');
-        item.className = `candidate-item${isSelected ? ' selected' : ''}`;
+    candidatesContainer.innerHTML = '';
+    nom.candidates.forEach((candidate, idx) => {
+      const isSelected = (selectedCandidateId === idx);
+      const item = document.createElement('div');
+      item.className = `candidate-item${isSelected ? ' selected' : ''}`;
 
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'candidate';
-        radio.value = idx;
-        radio.checked = isSelected;
-        radio.id = `cand_${idx}`;
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'candidate';
+      radio.value = idx;
+      radio.checked = isSelected;
+      radio.id = `cand_${idx}`;
 
-        const label = document.createElement('label');
-        label.htmlFor = `cand_${idx}`;
-        label.textContent = candidate;
+      const label = document.createElement('label');
+      label.htmlFor = `cand_${idx}`;
+      label.textContent = candidate;
 
-        item.appendChild(radio);
-        item.appendChild(label);
+      item.appendChild(radio);
+      item.appendChild(label);
 
-        item.addEventListener('click', (e) => {
-          if (e.target.tagName !== 'INPUT') {
-            radio.checked = true;
-            const ev = new Event('change', { bubbles: true });
-            radio.dispatchEvent(ev);
-          }
-        });
-
-        radio.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-            item.classList.add('selected');
-            selectedCandidateId = idx;
-            selectedHint.textContent = `✅ «${candidate}»`;
-            voteBtn.disabled = false;
-            statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
-          }
-        });
-
-        candidatesContainer.appendChild(item);
+      item.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT') {
+          radio.checked = true;
+          const ev = new Event('change', { bubbles: true });
+          radio.dispatchEvent(ev);
+        }
       });
 
-      // Результаты
-      if (total > 0) {
-        resultsBlock.style.display = 'block';
-        resultsBlock.innerHTML = '';
-        nom.candidates.forEach((candidate, idx) => {
-          const percent = (currentVotes[idx] / total) * 100;
-          const row = document.createElement('div');
-          row.className = 'result-row';
-          row.innerHTML = `
-            <span class="name">${candidate}</span>
-            <div class="bar-wrapper">
-              <div class="bar-fill" style="width: ${percent}%"></div>
-            </div>
-            <span class="percent">${Math.round(percent)}%</span>
-          `;
-          resultsBlock.appendChild(row);
-        });
-      } else {
-        resultsBlock.style.display = 'none';
-      }
-
-      totalVotesSpan.textContent = `${total} ${total % 10 === 1 && total % 100 !== 11 ? 'голос' : total % 10 >= 2 && total % 10 <= 4 && (total % 100 < 10 || total % 100 >= 20) ? 'голоса' : 'голосов'}`;
-
-      if (selectedCandidateId === null) {
-        voteBtn.disabled = true;
-        selectedHint.textContent = '—';
-        statusText.textContent = total === 0 ? '💡 Выберите кандидата и нажмите «Голосовать»' : '📊 Выберите кандидата для голосования';
-      } else {
-        voteBtn.disabled = false;
-        if (total > 0) {
-          statusText.textContent = '📌 Выберите кандидата для голосования (или сбросьте)';
-        } else {
-          statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
+      radio.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedCandidateId = idx;
+          selectedHint.textContent = `✅ «${candidate}»`;
+          voteBtn.disabled = false;
+          statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
         }
-      }
+      });
 
-      saveVotes();
+      candidatesContainer.appendChild(item);
+    });
+
+    if (total > 0) {
+      resultsBlock.style.display = 'block';
+      resultsBlock.innerHTML = '';
+      nom.candidates.forEach((candidate, idx) => {
+        const percent = (currentVotes[idx] / total) * 100;
+        const row = document.createElement('div');
+        row.className = 'result-row';
+        row.innerHTML = `
+          <span class="name">${candidate}</span>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="width: ${percent}%"></div>
+          </div>
+          <span class="percent">${Math.round(percent)}%</span>
+        `;
+        resultsBlock.appendChild(row);
+      });
+    } else {
+      resultsBlock.style.display = 'none';
     }
 
-    // Голосование
-    function handleVote() {
-      if (selectedCandidateId === null) return;
-      const nom = getCurrentNom();
+    totalVotesSpan.textContent = `${total} ${total % 10 === 1 && total % 100 !== 11 ? 'голос' : total % 10 >= 2 && total % 10 <= 4 && (total % 100 < 10 || total % 100 >= 20) ? 'голоса' : 'голосов'}`;
+
+    if (selectedCandidateId === null) {
+      voteBtn.disabled = true;
+      selectedHint.textContent = '—';
+      statusText.textContent = total === 0 ? '💡 Выберите кандидата и нажмите «Голосовать»' : '📊 Выберите кандидата для голосования';
+    } else {
+      voteBtn.disabled = false;
+      if (total > 0) {
+        statusText.textContent = '📌 Выберите кандидата для голосования (или сбросьте)';
+      } else {
+        statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
+      }
+    }
+
+    saveVotes();
+  }
+
+  function handleVote() {
+    if (selectedCandidateId === null) return;
+    const nom = getCurrentNom();
+    const currentVotes = votes[nom.id];
+    if (!currentVotes) return;
+    currentVotes[selectedCandidateId] += 1;
+    selectedCandidateId = null;
+    document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
+    voteBtn.disabled = true;
+    selectedHint.textContent = '—';
+    statusText.textContent = '✅ Голос учтён! Выберите другого кандидата или переключите номинацию.';
+    render();
+  }
+
+  function handleReset() {
+    const nom = getCurrentNom();
+    const total = getTotalVotesForCurrent();
+    if (total === 0) {
+      selectedCandidateId = null;
+      document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
+      document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
+      voteBtn.disabled = true;
+      selectedHint.textContent = '—';
+      statusText.textContent = '💡 Выберите кандидата';
+      render();
+      return;
+    }
+    if (confirm(`Сбросить все голоса в номинации «${nom.title}»?`)) {
       const currentVotes = votes[nom.id];
-      if (!currentVotes) return;
-      currentVotes[selectedCandidateId] += 1;
+      for (let i = 0; i < currentVotes.length; i++) currentVotes[i] = 0;
       selectedCandidateId = null;
       document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
       document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
       voteBtn.disabled = true;
       selectedHint.textContent = '—';
-      statusText.textContent = '✅ Голос учтён! Выберите другого кандидата или переключите номинацию.';
+      statusText.textContent = '🔄 Голоса обнулены. Выберите кандидата.';
       render();
     }
+  }
 
-    // Сброс текущей номинации
-    function handleReset() {
-      const nom = getCurrentNom();
-      const total = getTotalVotesForCurrent();
-      if (total === 0) {
-        selectedCandidateId = null;
-        document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
-        document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-        voteBtn.disabled = true;
-        selectedHint.textContent = '—';
-        statusText.textContent = '💡 Выберите кандидата';
-        render();
-        return;
-      }
-      if (confirm(`Сбросить все голоса в номинации «${nom.title}»?`)) {
-        const currentVotes = votes[nom.id];
-        for (let i = 0; i < currentVotes.length; i++) currentVotes[i] = 0;
-        selectedCandidateId = null;
-        document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
-        document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-        voteBtn.disabled = true;
-        selectedHint.textContent = '—';
-        statusText.textContent = '🔄 Голоса обнулены. Выберите кандидата.';
-        render();
-      }
-    }
+  function goToNom(index) {
+    if (index < 0 || index >= NOMINATIONS.length) return;
+    currentNomIndex = index;
+    selectedCandidateId = null;
+    document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
+    voteBtn.disabled = true;
+    selectedHint.textContent = '—';
+    statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
+    render();
+  }
 
-    function goToNom(index) {
-      if (index < 0 || index >= NOMINATIONS.length) return;
-      currentNomIndex = index;
-      selectedCandidateId = null;
-      document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
-      document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-      voteBtn.disabled = true;
-      selectedHint.textContent = '—';
-      statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
-      render();
-    }
+  function init() {
+    loadVotes();
+    currentNomIndex = 0;
+    selectedCandidateId = null;
+    render();
 
-    function init() {
-      loadVotes();
-      currentNomIndex = 0;
-      selectedCandidateId = null;
-      render();
+    voteBtn.addEventListener('click', handleVote);
+    resetBtn.addEventListener('click', handleReset);
+    prevNomBtn.addEventListener('click', () => goToNom(currentNomIndex - 1));
+    nextNomBtn.addEventListener('click', () => goToNom(currentNomIndex + 1));
+  }
 
-      voteBtn.addEventListener('click', handleVote);
-      resetBtn.addEventListener('click', handleReset);
-      prevNomBtn.addEventListener('click', () => goToNom(currentNomIndex - 1));
-      nextNomBtn.addEventListener('click', () => goToNom(currentNomIndex + 1));
-    }
-
-    init();
-  })();
+  init();
 </script>
 </body>
 </html>
