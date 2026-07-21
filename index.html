@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    /* ====== СТИЛИ (без изменений) ====== */
+    /* ====== СТИЛИ (чёрный фон, эндер-столбы, адаптив) ====== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg: #0a0a0a;
@@ -467,13 +467,13 @@
 
 <script>
   // =============================================================
-  //  EMAILJS – НОВЫЙ SERVICE ID (service_nek463y)
+  //  EMAILJS – ВСЕ КЛЮЧИ ВСТАВЛЕНЫ
   // =============================================================
   const EMAILJS_CONFIG = {
-    USE_EMAILJS: true,
-    SERVICE_ID: 'service_nek463y',      // ← обновлённый
-    TEMPLATE_ID: 'template_tpjpo6c',    // ваш Template ID
-    USER_ID: 'sCSwstC3SHqXGkniw'        // ваш Public Key
+    USE_EMAILJS: true,                     // true – реальная отправка, false – демо
+    SERVICE_ID: 'service_nek463y',        // ваш Service ID
+    TEMPLATE_ID: 'template_tpjpo6c',      // ваш Template ID
+    USER_ID: 'sCSwstC3SHqXGkniw'          // ваш Public Key
   };
 
   // =============================================================
@@ -597,7 +597,7 @@
   }
 
   // =============================================================
-  //  4. Генерация и отправка кода
+  //  4. Генерация и отправка кода (исправлено – теперь params совпадают с шаблоном)
   // =============================================================
   function generateCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -606,20 +606,30 @@
   async function sendCode(email, nick, code) {
     if (EMAILJS_CONFIG.USE_EMAILJS) {
       try {
+        // Инициализация (можно один раз, но оставим здесь на случай)
         await emailjs.init(EMAILJS_CONFIG.USER_ID);
         const params = {
-          to_email: email,
-          to_name: nick,
-          code: code,
+          nick: nick,          // ← совпадает с {{nick}} в шаблоне
+          code: code,          // ← совпадает с {{code}} в шаблоне
+          // Если в шаблоне есть другие переменные, добавьте их сюда
+          to_email: email,     // если хотите использовать в письме
           from_name: 'Nyash Awards'
         };
-        await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, params);
+        const response = await emailjs.send(
+          EMAILJS_CONFIG.SERVICE_ID,
+          EMAILJS_CONFIG.TEMPLATE_ID,
+          params
+        );
+        console.log('EmailJS ответ:', response);
         return true;
       } catch (err) {
-        console.error('EmailJS error:', err);
+        console.error('EmailJS ошибка:', err);
+        // Показываем подробную ошибку в alert
+        alert('Ошибка отправки: ' + (err.text || err.message || 'неизвестная ошибка'));
         return false;
       }
     } else {
+      // Демо-режим – всегда успешно
       return true;
     }
   }
@@ -648,6 +658,7 @@
 
     if (!valid) return;
 
+    // Проверяем, не проходил ли уже опрос
     const existing = findPlayerByNickOrEmail(nick, email);
     if (existing) {
       if (existing.completed) {
@@ -657,6 +668,7 @@
         showStep('final');
         return;
       } else {
+        // Удаляем незавершённого дубля
         const idx = allPlayers.findIndex(p => p.nick === existing.nick && p.email === existing.email);
         if (idx !== -1) allPlayers.splice(idx, 1);
         saveAllPlayers();
@@ -669,7 +681,7 @@
 
     const sent = await sendCode(email, nick, generatedCode);
     if (!sent && EMAILJS_CONFIG.USE_EMAILJS) {
-      alert('Не удалось отправить код. Проверьте настройки EmailJS.');
+      // Ошибка уже показана в alert внутри sendCode
       return;
     }
 
