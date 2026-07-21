@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    /* ====== СТИЛИ (чёрный фон, эндер-столбы, адаптив) ====== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg: #0a0a0a;
@@ -94,10 +93,7 @@
       margin-left: auto;
       border: 1px solid var(--border-light);
     }
-    .step {
-      display: none;
-      animation: fadeIn 0.4s ease;
-    }
+    .step { display: none; animation: fadeIn 0.4s ease; }
     .step.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .step-title {
@@ -107,15 +103,8 @@
       border-left: 4px solid rgba(255,255,255,0.3);
       padding-left: 16px;
     }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 6px;
-      color: var(--text-secondary);
-    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 6px; color: var(--text-secondary); }
     .form-group input {
       width: 100%;
       padding: 14px 20px;
@@ -132,16 +121,8 @@
       border-color: rgba(255,255,255,0.4);
       background: rgba(255,255,255,0.08);
     }
-    .form-group .error {
-      color: #ff6b6b;
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-    .form-group .hint {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
+    .form-group .error { color: #ff6b6b; font-size: 0.85rem; margin-top: 4px; }
+    .form-group .hint { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
     .btn {
       border: none;
       padding: 14px 36px;
@@ -156,26 +137,11 @@
       color: var(--text-primary);
       border: 1px solid var(--border-light);
     }
-    .btn-primary {
-      background: #fff;
-      color: #0a0a0a;
-      border-color: #fff;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: #e0e0e0;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255,255,255,0.1);
-    }
+    .btn-primary { background: #fff; color: #0a0a0a; border-color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #e0e0e0; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.1); }
     .btn-primary:disabled { opacity: 0.3; pointer-events: none; }
-    .btn-secondary {
-      background: transparent;
-      border-color: rgba(255,255,255,0.15);
-      color: var(--text-secondary);
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.3);
-    }
+    .btn-secondary { background: transparent; border-color: rgba(255,255,255,0.15); color: var(--text-secondary); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); }
     .btn-sm { padding: 10px 20px; font-size: 0.85rem; }
     .nomination-item {
       margin-bottom: 32px;
@@ -183,79 +149,114 @@
       border-bottom: 1px solid var(--border-light);
     }
     .nomination-item:last-child { border-bottom: none; }
-    .nomination-item .nom-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 4px;
+    .nomination-item .nom-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 4px; }
+    .nomination-item .nom-sub { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* Автодополнение */
+    .autocomplete-wrapper { position: relative; }
+    .autocomplete-wrapper input[type="text"] {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-light);
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: var(--transition);
     }
-    .nomination-item .nom-sub {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
+    .autocomplete-wrapper input[type="text"]:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
     }
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #1a1a1f;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      margin-top: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .autocomplete-dropdown.active { display: block; }
+    .autocomplete-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      color: #ccc;
+      transition: background 0.15s;
+      font-size: 0.95rem;
+    }
+    .autocomplete-item:hover, .autocomplete-item.selected { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* Радио-кнопки */
     .candidate-options {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      margin-bottom: 10px;
     }
     .candidate-option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-      border-radius: 40px;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 16px;
       background: rgba(255,255,255,0.03);
-      transition: var(--transition);
+      border: 1px solid transparent;
       cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      -webkit-user-select: none;
     }
-    .candidate-option:hover { background: rgba(255,255,255,0.07); }
+    .candidate-option:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
     .candidate-option input[type="radio"] {
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .radio-circle {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
       flex-shrink: 0;
-      background: transparent;
-      transition: 0.15s;
-    }
-    .candidate-option input[type="radio"]:checked {
-      border-color: #fff;
-      background: #fff;
-      box-shadow: inset 0 0 0 5px #0a0a0a, 0 0 0 1px #fff;
-    }
-    .candidate-option label { flex: 1; cursor: pointer; }
-    .custom-answer {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-      border-radius: 40px;
-      background: rgba(255,255,255,0.03);
+      justify-content: center;
+      transition: var(--transition);
     }
-    .custom-answer input[type="text"] {
-      flex: 1;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--border-light);
-      padding: 6px 0;
+    .candidate-option input[type="radio"]:checked ~ .radio-circle {
+      border-color: #fff;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255,255,255,0.3);
+    }
+    .candidate-option input[type="radio"]:checked ~ .radio-circle::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0a0a0a;
+    }
+    .candidate-option input[type="radio"]:checked ~ span {
       color: #fff;
-      font-family: inherit;
-      font-size: 0.95rem;
     }
-    .custom-answer input[type="text"]:focus {
-      outline: none;
-      border-bottom-color: rgba(255,255,255,0.5);
+    .candidate-option:has(input[type="radio"]:checked) {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
     }
-    .custom-answer .custom-label {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
+    .candidate-option span { flex: 1; }
+
     .nomination-status {
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 6px;
+      margin-top: 8px;
     }
     .flex-between {
       display: flex;
@@ -265,13 +266,15 @@
       gap: 12px;
     }
     .mt-20 { margin-top: 20px; }
-    .final-message {
-      text-align: center;
-      padding: 30px 0;
-    }
+    .final-message { text-align: center; padding: 30px 0; }
     .final-message .big-icon { font-size: 4rem; }
     .final-message h2 { font-size: 2rem; margin: 16px 0; }
     .final-message p { color: var(--text-secondary); }
+    .blocked-message { text-align: center; padding: 40px 20px; }
+    .blocked-message .blocked-icon { font-size: 4rem; }
+    .blocked-message h2 { font-size: 1.8rem; margin: 16px 0; color: #ff6b6b; }
+    .blocked-message p { color: var(--text-secondary); font-size: 1rem; }
+
     .admin-panel {
       margin-top: 30px;
       border-top: 1px solid var(--border-light);
@@ -292,15 +295,8 @@
       padding: 6px 12px;
       border-radius: 40px;
     }
-    .admin-panel .admin-toggle:hover {
-      background: rgba(255,255,255,0.04);
-      color: #fff;
-    }
-    .admin-content {
-      display: none;
-      margin-top: 20px;
-      text-align: left;
-    }
+    .admin-panel .admin-toggle:hover { background: rgba(255,255,255,0.04); color: #fff; }
+    .admin-content { display: none; margin-top: 20px; text-align: left; }
     .admin-content.active { display: block; }
     .admin-login {
       display: flex;
@@ -338,33 +334,20 @@
       font-size: 1rem;
       letter-spacing: 0.5px;
     }
-    .admin-table-wrap {
-      overflow-x: auto;
-      margin-top: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
+    .admin-table-wrap { overflow-x: auto; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     th, td {
       padding: 8px 10px;
       border: 1px solid rgba(255,255,255,0.06);
       text-align: left;
       vertical-align: top;
     }
-    th {
-      background: rgba(255,255,255,0.04);
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
+    th { background: rgba(255,255,255,0.04); font-weight: 600; color: var(--text-secondary); }
     td { color: var(--text-primary); }
-    .admin-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
+    .admin-actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+
+    .nick-with-tooltip { cursor: help; border-bottom: 1px dashed rgba(255,255,255,0.3); }
+
     @media (max-width: 600px) {
       .poll-wrapper { padding: 24px 16px; }
       .header h1 { font-size: 1.5rem; }
@@ -386,7 +369,14 @@
     <span class="year">2026</span>
   </div>
 
-  <!-- ШАГ 1: Регистрация -->
+  <div class="step" id="stepBlocked">
+    <div class="blocked-message">
+      <div class="blocked-icon">🚫</div>
+      <h2>Вы уже голосовали</h2>
+      <p>С этого устройства или IP-адреса уже был отправлен голос. Повторное голосование невозможно.</p>
+    </div>
+  </div>
+
   <div class="step active" id="stepRegister">
     <div class="step-title">✏️ Представьтесь</div>
     <div class="form-group">
@@ -402,7 +392,6 @@
     <button class="btn btn-primary" id="getCodeBtn">Получить код →</button>
   </div>
 
-  <!-- ШАГ 2: Подтверждение -->
   <div class="step" id="stepVerify">
     <div class="step-title">🔑 Подтверждение</div>
     <p style="color: var(--text-secondary); margin-bottom: 16px;">Введите код, отправленный на вашу почту</p>
@@ -420,17 +409,15 @@
     <button class="btn btn-secondary" id="backToRegisterBtn" style="margin-left: 12px;">Назад</button>
   </div>
 
-  <!-- ШАГ 3: Опрос -->
   <div class="step" id="stepSurvey">
     <div class="step-title">📋 Опрос</div>
     <div id="surveyContainer"></div>
     <div class="flex-between mt-20">
-      <span id="progressText" style="color: var(--text-secondary);">0 / 14</span>
+      <span id="progressText" style="color: var(--text-secondary);">0 / 15</span>
       <button class="btn btn-primary" id="submitSurveyBtn" disabled>Завершить опрос</button>
     </div>
   </div>
 
-  <!-- ШАГ 4: Финал -->
   <div class="step" id="stepFinal">
     <div class="final-message">
       <div class="big-icon">🎉</div>
@@ -439,7 +426,6 @@
     </div>
   </div>
 
-  <!-- Админ-панель -->
   <div class="admin-panel">
     <button class="admin-toggle" id="adminToggleBtn">🔐 Админ-панель</button>
     <div class="admin-content" id="adminContent">
@@ -452,7 +438,7 @@
         <h3>📋 Список участников</h3>
         <div class="admin-table-wrap">
           <table>
-            <thead><tr><th>Ник</th><th>Почта</th><th>Ответы</th></tr></thead>
+            <thead><tr><th>Ник</th><th>Почта</th><th>IP</th><th>Управление</th></tr></thead>
             <tbody id="adminTableBody"></tbody>
           </table>
         </div>
@@ -467,341 +453,357 @@
 
 <script>
   // =============================================================
-  //  EMAILJS – ВСЕ КЛЮЧИ ВСТАВЛЕНЫ
+  //  EMAILJS – ваши ключи (замените при необходимости)
   // =============================================================
   const EMAILJS_CONFIG = {
-    USE_EMAILJS: true,                     // true – реальная отправка, false – демо
-    SERVICE_ID: 'service_nek463y',        // ваш Service ID
-    TEMPLATE_ID: 'template_tpjpo6c',      // ваш Template ID
-    USER_ID: 'sCSwstC3SHqXGkniw'          // ваш Public Key
+    USE_EMAILJS: true,
+    SERVICE_ID: 'service_nnyjzgy',     // замените на ваш
+    TEMPLATE_ID: 'template_tpjpo6c',   // замените на ваш
+    USER_ID: 'sCSwstC3SHqXGkniw'       // замените на ваш
   };
 
   // =============================================================
-  //  1. Генерация эндер-столбов
+  //  СПИСОК ВСЕХ НИКОВ (для автодополнения)
+  // =============================================================
+  const ALL_NICKS = [
+    'Strika_Jarvis', 'Gate_ton', 'Tigr65789', 'livitody', 'meshokdeneg',
+    'AppleTob', 'roma_1917', 'blebik❤️', 'Lord15986', 'Mayorcraft',
+    'nevertajm', 'tomatoma', 'Stalker', 'Diller'
+  ];
+
+  // =============================================================
+  //  НОМИНАЦИИ (15 штук – как в вашем файле)
+  // =============================================================
+  const NOMINATIONS = [
+    { id: 'best_player', title: '🏅 Лучший игрок сезона', subtitle: 'Кто показал наилучшую игру?', type: 'nick' },
+    { id: 'best_builder', title: '🏗️ Лучший строитель', subtitle: 'Чьи постройки впечатлили всех?', type: 'nick' },
+    { id: 'best_pvp', title: '⚔️ Лучший PvP-игрок', subtitle: 'Кто сильнейший на арене?', type: 'nick' },
+    { id: 'best_event', title: '🎉 Лучший ивент сезона', subtitle: 'Какое событие вам запомнилось?', type: 'test', candidates: [
+      'игра meshokdeneg "пародия на игру в кальмара"',
+      'данж Анатолия',
+      'испытания Strika',
+      'красный круг'
+    ]},
+    { id: 'best_meme', title: '😂 Лучший мем', subtitle: 'Какой мем запомнился больше всего?', type: 'test', candidates: [
+      'ядерка',
+      'пивной дом (когда в доме Лорда весь воздух был заменён на пиво)',
+      'ЭТО СПАРТА!!!!!',
+      'дай опку (относится к meshokdeneg)'
+    ]},
+    { id: 'best_admin', title: '🛡️ Лучший администратор', subtitle: 'Кто внёс наибольший вклад в порядок?', type: 'nick' },
+    { id: 'best_pve', title: '🧟 Лучший PvE-игрок', subtitle: 'Кто покорял данжи и боссов?', type: 'nick' },
+    { id: 'best_noob', title: '🌱 Лучший новичок', subtitle: 'Кто быстро вырос и впечатлил?', type: 'nick' },
+    { id: 'best_project', title: '📐 Лучший проект', subtitle: 'Какое коллективное творение достойно награды?', type: 'test', candidates: [
+      'данж Анатолия',
+      'база админов (с ядерной бомбой)',
+      'бар Лорда',
+      'общага'
+    ]},
+    { id: 'best_farming', title: '🌾 Лучший фармер', subtitle: 'Кто собрал больше всего ресурсов?', type: 'nick' },
+    { id: 'best_redstone', title: '🔌 Лучший редстоун-инженер', subtitle: 'Чьи механизмы поражают воображение?', type: 'nick' },
+    { id: 'best_team', title: '🤝 Лучшая PvE-команда', subtitle: 'Какая команда показала лучшую слаженность?', type: 'test', candidates: [
+      'Коммунисты',
+      'Демократы',
+      'Анархисты'
+    ]},
+    { id: 'best_guildmaster', title: '🏰 Лучший глава гильдии', subtitle: 'Кто вдохновляет и объединяет игроков?', type: 'nick' },
+    { id: 'best_active', title: '🔥 Самый активный игрок', subtitle: 'Кто был на сервере чаще всех?', type: 'nick' },
+    { id: 'best_troll', title: '🧌 Главный тролль', subtitle: 'Кто главный тролль сервера?', type: 'nick' }
+  ];
+
+  // =============================================================
+  //  ОСТАЛЬНОЙ КОД (без изменений)
   // =============================================================
   (function createPillars() {
     const container = document.getElementById('pillarsContainer');
-    const count = 18;
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 18; i++) {
       const pillar = document.createElement('div');
       pillar.className = 'pillar';
-      const left = 15 + Math.random() * 70;
-      const height = 30 + Math.random() * 70;
-      const width = 1.5 + Math.random() * 3;
-      const delay = (Math.random() * 6).toFixed(2);
-      const duration = 3 + Math.random() * 5;
-      pillar.style.left = left + '%';
-      pillar.style.height = height + '%';
-      pillar.style.width = width + 'px';
-      pillar.style.animationDelay = delay + 's';
-      pillar.style.animationDuration = duration + 's';
+      pillar.style.left = (15 + Math.random() * 70) + '%';
+      pillar.style.height = (30 + Math.random() * 70) + '%';
+      pillar.style.width = (1.5 + Math.random() * 3) + 'px';
+      pillar.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
+      pillar.style.animationDuration = (3 + Math.random() * 5) + 's';
       container.appendChild(pillar);
     }
   })();
 
-  // =============================================================
-  //  2. Данные номинаций (14)
-  // =============================================================
-  const NOMINATIONS = [
-    { id: 'best_player', title: '🏅 Лучший игрок сезона', subtitle: 'Кто показал наилучшую игру?', candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro'] },
-    { id: 'best_builder', title: '🏗️ Лучший строитель', subtitle: 'Чьи постройки впечатлили всех?', candidates: ['PixelArtisan', 'BlockWizard', 'MegaBuild', 'ArchitectFox'] },
-    { id: 'best_pvp', title: '⚔️ Лучший PvP-игрок', subtitle: 'Кто сильнейший на арене?', candidates: ['KillerBee', 'PvPKing', 'ArenaMaster', 'StrikerX'] },
-    { id: 'best_event', title: '🎉 Лучший ивент сезона', subtitle: 'Какое событие вам запомнилось?', candidates: ['Охота на дракона', 'Турнир лучников', 'Постройка города', 'Новогодний карнавал'] },
-    { id: 'best_art', title: '🎨 Человек искусства', subtitle: 'Кто создал самый красивый арт?', candidates: ['ArtMage', 'PixelPainter', 'SketchMaster', 'ColorWeaver'] },
-    { id: 'best_admin', title: '🛡️ Лучший администратор', subtitle: 'Кто внёс наибольший вклад в порядок?', candidates: ['Admin_Prime', 'GuardianX', 'CraftManager', 'RuleKeeper'] },
-    { id: 'best_pve', title: '🧟 Лучший PvE-игрок', subtitle: 'Кто покорял данжи и боссов?', candidates: ['DungeonCrawler', 'BossSlayer', 'MobMaster', 'RaidLeader'] },
-    { id: 'best_noob', title: '🌱 Лучший новичок', subtitle: 'Кто быстро вырос и впечатлил?', candidates: ['NewbiePro', 'FreshStart', 'RookieStar', 'BeginnerKing'] },
-    { id: 'best_project', title: '📐 Лучший проект', subtitle: 'Какое коллективное творение достойно награды?', candidates: ['Подземный город', 'Летающий остров', 'Аквапарк', 'Храм солнца'] },
-    { id: 'best_farming', title: '🌾 Лучший фармер', subtitle: 'Кто собрал больше всего ресурсов?', candidates: ['FarmLord', 'HarvestKing', 'CropMaster', 'MinerPro'] },
-    { id: 'best_redstone', title: '🔌 Лучший редстоун-инженер', subtitle: 'Чьи механизмы поражают воображение?', candidates: ['RedstoneWiz', 'LogicMaster', 'CircuitPro', 'MechBuilder'] },
-    { id: 'best_team', title: '🤝 Лучшая PvE-команда', subtitle: 'Какая команда показала лучшую слаженность?', candidates: ['DragonSlayers', 'ShadowCrew', 'PhoenixRaid', 'IronClan'] },
-    { id: 'best_guildmaster', title: '🏰 Лучший глава гильдии', subtitle: 'Кто вдохновляет и объединяет игроков?', candidates: ['GuildMaster_1', 'LeaderPro', 'ClanChief', 'OrderKeeper'] },
-    { id: 'best_active', title: '🔥 Самый активный игрок', subtitle: 'Кто был на сервере чаще всех?', candidates: ['AlwaysOnline', 'NoLifeKing', 'GrindMachine', 'ActivityStar'] }
-  ];
-
-  // =============================================================
-  //  3. Состояние приложения
-  // =============================================================
   const ADMIN_PASSWORD = 'admin123';
   let currentPlayer = null;
   let allPlayers = [];
+  let allIPs = [];
   let pendingNick = '';
   let pendingEmail = '';
   let generatedCode = '';
-  let codeVerified = false;
+  let activeAutocomplete = null;
+  let userIP = null;
 
-  // DOM
-  const stepRegister = document.getElementById('stepRegister');
-  const stepVerify = document.getElementById('stepVerify');
-  const stepSurvey = document.getElementById('stepSurvey');
-  const stepFinal = document.getElementById('stepFinal');
-  const playerNick = document.getElementById('playerNick');
-  const playerEmail = document.getElementById('playerEmail');
-  const nickError = document.getElementById('nickError');
-  const emailError = document.getElementById('emailError');
-  const getCodeBtn = document.getElementById('getCodeBtn');
-  const verifyCode = document.getElementById('verifyCode');
-  const codeError = document.getElementById('codeError');
-  const codeHint = document.getElementById('codeHint');
-  const demoCodeBlock = document.getElementById('demoCodeBlock');
-  const demoCodeDisplay = document.getElementById('demoCodeDisplay');
-  const verifyBtn = document.getElementById('verifyBtn');
-  const backToRegisterBtn = document.getElementById('backToRegisterBtn');
-  const surveyContainer = document.getElementById('surveyContainer');
-  const progressText = document.getElementById('progressText');
-  const submitBtn = document.getElementById('submitSurveyBtn');
-  const adminToggleBtn = document.getElementById('adminToggleBtn');
-  const adminContent = document.getElementById('adminContent');
-  const adminLogin = document.getElementById('adminLogin');
-  const adminDashboard = document.getElementById('adminDashboard');
-  const adminPassword = document.getElementById('adminPassword');
-  const adminLoginBtn = document.getElementById('adminLoginBtn');
-  const adminLoginError = document.getElementById('adminLoginError');
-  const adminTableBody = document.getElementById('adminTableBody');
-  const exportJsonBtn = document.getElementById('exportJsonBtn');
-  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+  const $ = (id) => document.getElementById(id);
 
-  // Загрузка / сохранение
   function loadAllPlayers() {
-    const stored = localStorage.getItem('nyash_all_players');
-    if (stored) {
-      try { allPlayers = JSON.parse(stored); } catch(e) { allPlayers = []; }
-    } else { allPlayers = []; }
+    try { allPlayers = JSON.parse(localStorage.getItem('nyash_all_players')) || []; } catch(e) { allPlayers = []; }
   }
-  function saveAllPlayers() {
-    localStorage.setItem('nyash_all_players', JSON.stringify(allPlayers));
+  function saveAllPlayers() { localStorage.setItem('nyash_all_players', JSON.stringify(allPlayers)); }
+  function loadAllIPs() {
+    try { allIPs = JSON.parse(localStorage.getItem('nyash_all_ips')) || []; } catch(e) { allIPs = []; }
   }
+  function saveAllIPs() { localStorage.setItem('nyash_all_ips', JSON.stringify(allIPs)); }
   function loadCurrentPlayer() {
-    const stored = localStorage.getItem('nyash_current_player');
-    if (stored) {
-      try { currentPlayer = JSON.parse(stored); } catch(e) { currentPlayer = null; }
-    } else { currentPlayer = null; }
+    try { currentPlayer = JSON.parse(localStorage.getItem('nyash_current_player')); } catch(e) { currentPlayer = null; }
   }
   function saveCurrentPlayer() {
-    if (currentPlayer) {
-      localStorage.setItem('nyash_current_player', JSON.stringify(currentPlayer));
-    } else {
-      localStorage.removeItem('nyash_current_player');
-    }
+    if (currentPlayer) localStorage.setItem('nyash_current_player', JSON.stringify(currentPlayer));
+    else localStorage.removeItem('nyash_current_player');
   }
   function findPlayerByNickOrEmail(nick, email) {
     return allPlayers.find(p => p.nick.toLowerCase() === nick.toLowerCase() || p.email.toLowerCase() === email.toLowerCase());
   }
+  function isIPUsed(ip) { return allIPs.includes(ip); }
+  function hasVotedCookie() { return document.cookie.split('; ').find(row => row.startsWith('nyash_voted=')); }
+  function setVotedCookie() {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    document.cookie = `nyash_voted=true; expires=${date.toUTCString()}; path=/; SameSite=Strict`;
+  }
 
   function showStep(step) {
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    if (step === 'register') stepRegister.classList.add('active');
-    else if (step === 'verify') stepVerify.classList.add('active');
-    else if (step === 'survey') stepSurvey.classList.add('active');
-    else if (step === 'final') stepFinal.classList.add('active');
+    const map = { blocked: 'stepBlocked', register: 'stepRegister', verify: 'stepVerify', survey: 'stepSurvey', final: 'stepFinal' };
+    if (map[step]) $(map[step]).classList.add('active');
   }
 
-  // =============================================================
-  //  4. Генерация и отправка кода (исправлено – теперь params совпадают с шаблоном)
-  // =============================================================
-  function generateCode() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  }
+  function generateCode() { return Math.floor(100000 + Math.random() * 900000).toString(); }
 
   async function sendCode(email, nick, code) {
-    if (EMAILJS_CONFIG.USE_EMAILJS) {
-      try {
-        // Инициализация (можно один раз, но оставим здесь на случай)
-        await emailjs.init(EMAILJS_CONFIG.USER_ID);
-        const params = {
-          nick: nick,          // ← совпадает с {{nick}} в шаблоне
-          code: code,          // ← совпадает с {{code}} в шаблоне
-          // Если в шаблоне есть другие переменные, добавьте их сюда
-          to_email: email,     // если хотите использовать в письме
-          from_name: 'Nyash Awards'
-        };
-        const response = await emailjs.send(
-          EMAILJS_CONFIG.SERVICE_ID,
-          EMAILJS_CONFIG.TEMPLATE_ID,
-          params
-        );
-        console.log('EmailJS ответ:', response);
-        return true;
-      } catch (err) {
-        console.error('EmailJS ошибка:', err);
-        // Показываем подробную ошибку в alert
-        alert('Ошибка отправки: ' + (err.text || err.message || 'неизвестная ошибка'));
-        return false;
-      }
-    } else {
-      // Демо-режим – всегда успешно
+    if (!EMAILJS_CONFIG.USE_EMAILJS) return true;
+    try {
+      await emailjs.init(EMAILJS_CONFIG.USER_ID);
+      await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, {
+        to_email: email, to_name: nick, code: code, from_name: 'Nyash Awards'
+      });
       return true;
-    }
+    } catch(e) { console.error('EmailJS error:', e); return false; }
   }
 
-  // =============================================================
-  //  5. Обработчики регистрации и кода
-  // =============================================================
-  getCodeBtn.addEventListener('click', async function() {
-    const nick = playerNick.value.trim();
-    const email = playerEmail.value.trim();
+  async function getIP() {
+    try {
+      const resp = await fetch('https://api.ipify.org?format=json');
+      const data = await resp.json();
+      return data.ip;
+    } catch(e) { return 'unknown_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); }
+  }
+
+  function checkAlreadyVoted(ip) {
+    if (hasVotedCookie()) return true;
+    if (ip && isIPUsed(ip)) return true;
+    return false;
+  }
+
+  function checkNickOrEmailUsed(nick, email) {
+    const existing = findPlayerByNickOrEmail(nick, email);
+    return existing && existing.completed;
+  }
+
+  $('getCodeBtn').addEventListener('click', async function() {
+    const nick = $('playerNick').value.trim();
+    const email = $('playerEmail').value.trim();
     let valid = true;
-    nickError.textContent = '';
-    emailError.textContent = '';
-
-    if (!nick) {
-      nickError.textContent = 'Введите ник';
-      valid = false;
-    }
-    if (!email) {
-      emailError.textContent = 'Введите почту';
-      valid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      emailError.textContent = 'Введите корректную почту (например, name@domain.com)';
-      valid = false;
-    }
-
+    $('nickError').textContent = '';
+    $('emailError').textContent = '';
+    if (!nick) { $('nickError').textContent = 'Введите ник'; valid = false; }
+    if (!email) { $('emailError').textContent = 'Введите почту'; valid = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('emailError').textContent = 'Введите корректную почту'; valid = false; }
     if (!valid) return;
 
-    // Проверяем, не проходил ли уже опрос
-    const existing = findPlayerByNickOrEmail(nick, email);
-    if (existing) {
-      if (existing.completed) {
-        alert('Вы уже проходили опрос!');
-        currentPlayer = existing;
-        saveCurrentPlayer();
-        showStep('final');
-        return;
-      } else {
-        // Удаляем незавершённого дубля
-        const idx = allPlayers.findIndex(p => p.nick === existing.nick && p.email === existing.email);
-        if (idx !== -1) allPlayers.splice(idx, 1);
-        saveAllPlayers();
-      }
+    if (checkNickOrEmailUsed(nick, email)) {
+      alert('Этот ник или почта уже использовались для голосования. Повторное голосование невозможно.');
+      return;
     }
 
     pendingNick = nick;
     pendingEmail = email;
     generatedCode = generateCode();
 
+    const btn = $('getCodeBtn');
+    btn.disabled = true;
+    btn.textContent = 'Отправка...';
+
     const sent = await sendCode(email, nick, generatedCode);
-    if (!sent && EMAILJS_CONFIG.USE_EMAILJS) {
-      // Ошибка уже показана в alert внутри sendCode
-      return;
-    }
+    btn.disabled = false;
+    btn.textContent = 'Получить код →';
+
+    if (!sent) { alert('Не удалось отправить код.'); return; }
 
     if (!EMAILJS_CONFIG.USE_EMAILJS) {
-      demoCodeBlock.style.display = 'block';
-      demoCodeDisplay.textContent = generatedCode;
-      codeHint.textContent = '📨 (демо) Код отправлен на экран, введите его ниже';
+      $('demoCodeBlock').style.display = 'block';
+      $('demoCodeDisplay').textContent = generatedCode;
+      $('codeHint').textContent = '📨 Демо-режим: код показан выше';
     } else {
-      demoCodeBlock.style.display = 'none';
-      codeHint.textContent = '✉️ Код отправлен на вашу почту';
+      $('demoCodeBlock').style.display = 'none';
+      $('codeHint').textContent = '✉️ Код отправлен на почту';
     }
-
     showStep('verify');
-    verifyCode.value = '';
-    codeError.textContent = '';
+    $('verifyCode').value = '';
+    $('codeError').textContent = '';
   });
 
-  verifyBtn.addEventListener('click', function() {
-    const entered = verifyCode.value.trim();
-    if (!entered) {
-      codeError.textContent = 'Введите код';
-      return;
-    }
+  $('verifyBtn').addEventListener('click', function() {
+    const entered = $('verifyCode').value.trim();
+    if (!entered) { $('codeError').textContent = 'Введите код'; return; }
     if (entered === generatedCode) {
-      codeVerified = true;
-      currentPlayer = {
-        nick: pendingNick,
-        email: pendingEmail,
-        answers: {},
-        completed: false,
-        verified: true
-      };
+      currentPlayer = { nick: pendingNick, email: pendingEmail, ip: userIP, answers: {}, completed: false, verified: true };
       allPlayers.push(currentPlayer);
       saveAllPlayers();
       saveCurrentPlayer();
       showStep('survey');
       renderSurvey();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      codeError.textContent = 'Неверный код. Попробуйте ещё раз.';
-    }
+    } else { $('codeError').textContent = 'Неверный код'; }
   });
 
-  backToRegisterBtn.addEventListener('click', function() {
+  $('backToRegisterBtn').addEventListener('click', function() {
     showStep('register');
-    codeError.textContent = '';
-    verifyCode.value = '';
-    demoCodeBlock.style.display = 'none';
+    $('verifyCode').value = '';
+    $('codeError').textContent = '';
+    $('demoCodeBlock').style.display = 'none';
   });
 
-  // =============================================================
-  //  6. Рендеринг опроса
-  // =============================================================
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   function renderSurvey() {
     if (!currentPlayer) return;
     const answers = currentPlayer.answers || {};
     let html = '';
     let answeredCount = 0;
 
-    NOMINATIONS.forEach((nom) => {
+    NOMINATIONS.forEach(nom => {
       const answer = answers[nom.id] || null;
-      const isAnswered = answer !== null;
-      if (isAnswered) answeredCount++;
+      if (answer) answeredCount++;
 
       html += `<div class="nomination-item" data-nom-id="${nom.id}">`;
       html += `<div class="nom-title">${nom.title}</div>`;
       html += `<div class="nom-sub">${nom.subtitle}</div>`;
-      html += `<div class="candidate-options">`;
-      nom.candidates.forEach(cand => {
-        const checked = (answer && answer.type === 'candidate' && answer.value === cand) ? 'checked' : '';
-        html += `
-          <div class="candidate-option">
-            <input type="radio" name="nom_${nom.id}" value="${cand}" ${checked} data-nom="${nom.id}" />
-            <label>${cand}</label>
-          </div>
-        `;
-      });
-      html += `</div>`;
-      const customVal = (answer && answer.type === 'custom') ? answer.value : '';
-      html += `
-        <div class="custom-answer">
-          <span class="custom-label">Свой вариант:</span>
-          <input type="text" class="custom-input" data-nom="${nom.id}" placeholder="Напишите свой ответ" value="${customVal}" />
-        </div>
-      `;
-      html += `<div class="nomination-status">${isAnswered ? '✅ Отвечено' : '⏳ Ожидает ответа'}</div>`;
+
+      if (nom.type === 'test') {
+        html += `<div class="candidate-options">`;
+        nom.candidates.forEach(cand => {
+          const checked = (answer && answer.value === cand) ? 'checked' : '';
+          html += `
+            <label class="candidate-option">
+              <input type="radio" name="nom_${nom.id}" value="${escapeHtml(cand)}" ${checked} data-nom="${nom.id}" />
+              <div class="radio-circle"></div>
+              <span>${escapeHtml(cand)}</span>
+            </label>`;
+        });
+        html += `</div>`;
+      } else {
+        html += `<div class="autocomplete-wrapper">`;
+        html += `<input type="text" class="nomination-input" data-nom="${nom.id}" 
+                  placeholder="Начните вводить ник..." value="${escapeHtml(answer ? answer.value : '')}" autocomplete="off" />`;
+        html += `<div class="autocomplete-dropdown"></div>`;
+        html += `</div>`;
+      }
+
+      html += `<div class="nomination-status">${answer ? '✅ Отвечено' : '⏳ Ожидает ответа'}</div>`;
       html += `</div>`;
     });
 
-    surveyContainer.innerHTML = html;
-    progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
-    submitBtn.disabled = (answeredCount < NOMINATIONS.length);
+    $('surveyContainer').innerHTML = html;
+    $('progressText').textContent = `${answeredCount} / ${NOMINATIONS.length}`;
+    $('submitSurveyBtn').disabled = (answeredCount < NOMINATIONS.length);
 
     document.querySelectorAll('.candidate-option input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
         const nomId = this.dataset.nom;
-        const customInput = document.querySelector(`.custom-input[data-nom="${nomId}"]`);
-        if (this.checked) {
-          customInput.value = '';
-          saveAnswer(nomId, { type: 'candidate', value: this.value });
-        }
+        saveAnswer(nomId, { type: 'candidate', value: this.value });
       });
     });
 
-    document.querySelectorAll('.custom-input').forEach(input => {
+    document.querySelectorAll('.nomination-input').forEach(input => {
+      const wrapper = input.parentElement;
+      const dropdown = wrapper.querySelector('.autocomplete-dropdown');
+
       input.addEventListener('input', function() {
-        const nomId = this.dataset.nom;
-        const radios = document.querySelectorAll(`input[name="nom_${nomId}"]`);
-        radios.forEach(r => r.checked = false);
         const val = this.value.trim();
-        if (val) {
-          saveAnswer(nomId, { type: 'custom', value: val });
-        } else {
-          removeAnswer(nomId);
-        }
+        const nomId = this.dataset.nom;
+        if (val) saveAnswer(nomId, { type: 'nick', value: val });
+        else removeAnswer(nomId);
         updateSurveyStatus();
+        showAutocomplete(this, dropdown);
+      });
+
+      input.addEventListener('focus', function() {
+        showAutocomplete(this, dropdown);
+        activeAutocomplete = { input, dropdown };
+      });
+
+      input.addEventListener('blur', function() {
+        setTimeout(() => {
+          dropdown.classList.remove('active');
+          if (activeAutocomplete && activeAutocomplete.input === input) activeAutocomplete = null;
+        }, 150);
+      });
+
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown') { e.preventDefault(); navigateDropdown(dropdown, 1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); navigateDropdown(dropdown, -1); }
+        else if (e.key === 'Enter') { e.preventDefault(); selectCurrentDropdown(dropdown, input); }
+        else if (e.key === 'Escape') { dropdown.classList.remove('active'); }
       });
     });
 
     updateSurveyStatus();
+  }
+
+  function showAutocomplete(input, dropdown) {
+    const val = input.value.toLowerCase().trim();
+    dropdown.innerHTML = '';
+    if (!val) { dropdown.classList.remove('active'); return; }
+    const matches = ALL_NICKS.filter(nick => nick.toLowerCase().startsWith(val));
+    if (matches.length === 0) { dropdown.classList.remove('active'); return; }
+    matches.forEach(nick => {
+      const div = document.createElement('div');
+      div.className = 'autocomplete-item';
+      div.textContent = nick;
+      div.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        input.value = nick;
+        dropdown.classList.remove('active');
+        const nomId = input.dataset.nom;
+        saveAnswer(nomId, { type: 'nick', value: nick });
+        updateSurveyStatus();
+      });
+      dropdown.appendChild(div);
+    });
+    dropdown.classList.add('active');
+  }
+
+  function navigateDropdown(dropdown, direction) {
+    const items = dropdown.querySelectorAll('.autocomplete-item');
+    if (items.length === 0) return;
+    let selected = dropdown.querySelector('.autocomplete-item.selected');
+    let idx = selected ? Array.from(items).indexOf(selected) : -1;
+    if (selected) selected.classList.remove('selected');
+    idx += direction;
+    if (idx >= items.length) idx = 0;
+    if (idx < 0) idx = items.length - 1;
+    items[idx].classList.add('selected');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  }
+
+  function selectCurrentDropdown(dropdown, input) {
+    const selected = dropdown.querySelector('.autocomplete-item.selected');
+    if (selected) {
+      input.value = selected.textContent;
+      dropdown.classList.remove('active');
+      const nomId = input.dataset.nom;
+      saveAnswer(nomId, { type: 'nick', value: selected.textContent });
+      updateSurveyStatus();
+    }
   }
 
   function saveAnswer(nomId, answer) {
@@ -810,24 +812,16 @@
     currentPlayer.answers[nomId] = answer;
     saveCurrentPlayer();
     const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
-    if (idx !== -1) {
-      allPlayers[idx].answers = currentPlayer.answers;
-      saveAllPlayers();
-    }
+    if (idx !== -1) { allPlayers[idx].answers = currentPlayer.answers; saveAllPlayers(); }
     updateSurveyStatus();
   }
 
   function removeAnswer(nomId) {
-    if (!currentPlayer) return;
-    if (currentPlayer.answers) {
-      delete currentPlayer.answers[nomId];
-      saveCurrentPlayer();
-      const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
-      if (idx !== -1) {
-        allPlayers[idx].answers = currentPlayer.answers;
-        saveAllPlayers();
-      }
-    }
+    if (!currentPlayer || !currentPlayer.answers) return;
+    delete currentPlayer.answers[nomId];
+    saveCurrentPlayer();
+    const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
+    if (idx !== -1) { allPlayers[idx].answers = currentPlayer.answers; saveAllPlayers(); }
     updateSurveyStatus();
   }
 
@@ -835,162 +829,193 @@
     if (!currentPlayer) return;
     const answers = currentPlayer.answers || {};
     let answeredCount = 0;
-    NOMINATIONS.forEach(nom => {
-      if (answers[nom.id]) answeredCount++;
-    });
-    progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
-    submitBtn.disabled = (answeredCount < NOMINATIONS.length);
+    NOMINATIONS.forEach(nom => { if (answers[nom.id]) answeredCount++; });
+    $('progressText').textContent = `${answeredCount} / ${NOMINATIONS.length}`;
+    $('submitSurveyBtn').disabled = (answeredCount < NOMINATIONS.length);
     document.querySelectorAll('.nomination-item').forEach(item => {
       const nomId = item.dataset.nomId;
       const statusDiv = item.querySelector('.nomination-status');
-      if (statusDiv) {
-        statusDiv.textContent = answers[nomId] ? '✅ Отвечено' : '⏳ Ожидает ответа';
-      }
+      if (statusDiv) statusDiv.textContent = answers[nomId] ? '✅ Отвечено' : '⏳ Ожидает ответа';
     });
   }
 
-  // =============================================================
-  //  7. Завершение опроса
-  // =============================================================
-  function finishSurvey() {
+  $('submitSurveyBtn').addEventListener('click', function() {
     if (!currentPlayer) return;
-    const answers = currentPlayer.answers || {};
-    const allAnswered = NOMINATIONS.every(nom => answers[nom.id] !== undefined && answers[nom.id] !== null);
-    if (!allAnswered) {
-      alert('Ответьте на все вопросы!');
+    const allAnswered = NOMINATIONS.every(nom => currentPlayer.answers[nom.id]);
+    if (!allAnswered) { alert('Ответьте на все вопросы!'); return; }
+    if (checkNickOrEmailUsed(currentPlayer.nick, currentPlayer.email)) {
+      alert('Этот ник или почта уже использовались.');
+      return;
+    }
+    if (currentPlayer.ip && isIPUsed(currentPlayer.ip)) {
+      alert('С этого IP уже голосовали.');
       return;
     }
     currentPlayer.completed = true;
     saveCurrentPlayer();
-    const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
-    if (idx !== -1) {
-      allPlayers[idx].completed = true;
-      saveAllPlayers();
+    if (currentPlayer.ip && !isIPUsed(currentPlayer.ip)) {
+      allIPs.push(currentPlayer.ip);
+      saveAllIPs();
     }
+    const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
+    if (idx !== -1) { allPlayers[idx].completed = true; saveAllPlayers(); }
+    setVotedCookie();
     showStep('final');
-  }
+  });
 
-  submitBtn.addEventListener('click', finishSurvey);
-
-  // =============================================================
-  //  8. Админ-панель
-  // =============================================================
   let adminLoggedIn = false;
 
+  function deletePlayer(nick, email) {
+    if (!confirm(`Удалить игрока ${nick}?\nОн сможет пройти опрос заново.`)) return;
+    const playerToDelete = allPlayers.find(p => p.nick === nick && p.email === email);
+    if (playerToDelete && playerToDelete.ip) {
+      allIPs = allIPs.filter(ip => ip !== playerToDelete.ip);
+      saveAllIPs();
+    }
+    allPlayers = allPlayers.filter(p => !(p.nick === nick && p.email === email));
+    saveAllPlayers();
+    if (currentPlayer && currentPlayer.nick === nick && currentPlayer.email === email) {
+      currentPlayer = null;
+      saveCurrentPlayer();
+    }
+    document.cookie = 'nyash_voted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    renderAdminTable();
+    alert(`${nick} удалён. Может голосовать заново.`);
+  }
+
   function renderAdminTable() {
-    const tbody = adminTableBody;
+    const tbody = $('adminTableBody');
     tbody.innerHTML = '';
     if (allPlayers.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color: var(--text-muted);">Нет данных</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Нет данных</td></tr>';
       return;
     }
     allPlayers.forEach(p => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${p.nick}</td><td>${p.email}</td>`;
-      let answersHtml = '';
+      let tooltipText = '';
       if (p.answers) {
+        const parts = [];
         NOMINATIONS.forEach(nom => {
           const a = p.answers[nom.id];
-          if (a) {
-            const val = a.type === 'candidate' ? a.value : `(свой) ${a.value}`;
-            answersHtml += `<div><strong>${nom.title}</strong>: ${val}</div>`;
-          } else {
-            answersHtml += `<div><strong>${nom.title}</strong>: <span style="color:var(--text-muted);">не отвечено</span></div>`;
-          }
+          parts.push(a ? `${nom.title}: ${a.value}` : `${nom.title}: не отвечено`);
         });
-      } else {
-        answersHtml = '<span style="color:var(--text-muted);">нет ответов</span>';
-      }
-      const td = document.createElement('td');
-      td.innerHTML = answersHtml;
-      tr.appendChild(td);
+        tooltipText = parts.join('\n');
+      } else { tooltipText = 'Нет ответов'; }
+
+      tr.innerHTML = `
+        <td>
+          <span class="nick-with-tooltip" data-tooltip="${escapeHtml(tooltipText).replace(/"/g, '&quot;')}">
+            ${escapeHtml(p.nick)} ${p.completed ? '✅' : '⏳'}
+          </span>
+        </td>
+        <td>${escapeHtml(p.email)}</td>
+        <td style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(p.ip || 'неизвестно')}</td>
+        <td>
+          <button class="btn btn-sm delete-player-btn" data-nick="${escapeHtml(p.nick)}" data-email="${escapeHtml(p.email)}" 
+                  style="background:#ff4444; color:#fff; border:none; padding:6px 14px; font-size:0.8rem; cursor:pointer; border-radius:20px;">
+            🗑️ Сброс
+          </button>
+        </td>`;
       tbody.appendChild(tr);
+    });
+
+    document.querySelectorAll('.delete-player-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        deletePlayer(this.dataset.nick, this.dataset.email);
+      });
+    });
+
+    let tooltipEl = document.getElementById('admin-tooltip');
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'admin-tooltip';
+      tooltipEl.style.cssText = `
+        position: fixed; background: #1a1a1f; border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 12px; padding: 12px 16px; font-size: 0.8rem; color: #ccc;
+        max-width: 400px; z-index: 9999; pointer-events: none; display: none;
+        white-space: pre-line; box-shadow: 0 10px 30px rgba(0,0,0,0.8); line-height: 1.5;
+      `;
+      document.body.appendChild(tooltipEl);
+    }
+
+    document.querySelectorAll('.nick-with-tooltip').forEach(el => {
+      el.addEventListener('mouseenter', function(e) {
+        tooltipEl.textContent = this.dataset.tooltip;
+        tooltipEl.style.display = 'block';
+        updateTooltipPosition(e);
+      });
+      el.addEventListener('mousemove', updateTooltipPosition);
+      el.addEventListener('mouseleave', () => tooltipEl.style.display = 'none');
     });
   }
 
+  function updateTooltipPosition(e) {
+    const tooltipEl = document.getElementById('admin-tooltip');
+    if (!tooltipEl) return;
+    let x = e.clientX + 15, y = e.clientY + 15;
+    const rect = tooltipEl.getBoundingClientRect();
+    if (x + 400 > window.innerWidth) x = e.clientX - 420;
+    if (y + rect.height > window.innerHeight) y = e.clientY - rect.height - 10;
+    tooltipEl.style.left = x + 'px';
+    tooltipEl.style.top = y + 'px';
+  }
+
   function exportJson() {
-    const data = JSON.stringify(allPlayers, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const data = { players: allPlayers, usedIPs: allIPs, exportDate: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = 'nyash_awards_data.json';
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(a.href);
   }
 
-  function adminLoginHandler() {
-    const pass = adminPassword.value.trim();
-    if (pass === ADMIN_PASSWORD) {
-      adminLoggedIn = true;
-      adminLogin.style.display = 'none';
-      adminDashboard.classList.add('active');
-      adminLoginError.textContent = '';
-      renderAdminTable();
-    } else {
-      adminLoginError.textContent = 'Неверный пароль';
-    }
-  }
-
-  function adminLogout() {
-    adminLoggedIn = false;
-    adminLogin.style.display = 'flex';
-    adminDashboard.classList.remove('active');
-    adminPassword.value = '';
-    adminLoginError.textContent = '';
-    adminContent.classList.remove('active');
-    adminToggleBtn.textContent = '🔐 Админ-панель';
-  }
-
-  adminToggleBtn.addEventListener('click', function() {
-    const isActive = adminContent.classList.toggle('active');
-    if (isActive) {
-      adminToggleBtn.textContent = '🔒 Скрыть админ-панель';
-      if (!adminLoggedIn) {
-        adminLogin.style.display = 'flex';
-        adminDashboard.classList.remove('active');
-      } else {
-        adminLogin.style.display = 'none';
-        adminDashboard.classList.add('active');
-        renderAdminTable();
-      }
-    } else {
-      adminToggleBtn.textContent = '🔐 Админ-панель';
-      adminLogout();
-    }
+  $('adminToggleBtn').addEventListener('click', function() {
+    const active = $('adminContent').classList.toggle('active');
+    this.textContent = active ? '🔒 Скрыть админ-панель' : '🔐 Админ-панель';
+    if (active && adminLoggedIn) { $('adminLogin').style.display = 'none'; $('adminDashboard').classList.add('active'); renderAdminTable(); }
+    else if (active) { $('adminLogin').style.display = 'flex'; $('adminDashboard').classList.remove('active'); }
   });
 
-  adminLoginBtn.addEventListener('click', adminLoginHandler);
-  adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminLoginHandler(); });
-  adminLogoutBtn.addEventListener('click', adminLogout);
-  exportJsonBtn.addEventListener('click', exportJson);
+  $('adminLoginBtn').addEventListener('click', function() {
+    if ($('adminPassword').value.trim() === ADMIN_PASSWORD) {
+      adminLoggedIn = true;
+      $('adminLogin').style.display = 'none';
+      $('adminDashboard').classList.add('active');
+      $('adminLoginError').textContent = '';
+      renderAdminTable();
+    } else { $('adminLoginError').textContent = 'Неверный пароль'; }
+  });
 
-  // =============================================================
-  //  9. Инициализация
-  // =============================================================
-  function initApp() {
+  $('adminPassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') $('adminLoginBtn').click();
+  });
+
+  $('adminLogoutBtn').addEventListener('click', function() {
+    adminLoggedIn = false;
+    $('adminLogin').style.display = 'flex';
+    $('adminDashboard').classList.remove('active');
+    $('adminPassword').value = '';
+    $('adminLoginError').textContent = '';
+  });
+
+  $('exportJsonBtn').addEventListener('click', exportJson);
+
+  async function initApp() {
     loadAllPlayers();
+    loadAllIPs();
+    userIP = await getIP();
+    if (checkAlreadyVoted(userIP)) { showStep('blocked'); return; }
     loadCurrentPlayer();
-
     if (currentPlayer) {
       if (currentPlayer.completed) {
+        if (!isIPUsed(currentPlayer.ip)) { allIPs.push(currentPlayer.ip); saveAllIPs(); }
+        setVotedCookie();
         showStep('final');
-      } else if (currentPlayer.verified) {
-        showStep('survey');
-        renderSurvey();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        localStorage.removeItem('nyash_current_player');
-        currentPlayer = null;
-        showStep('register');
-      }
-    } else {
-      showStep('register');
-    }
-
-    if (EMAILJS_CONFIG.USE_EMAILJS) {
-      emailjs.init(EMAILJS_CONFIG.USER_ID);
-    }
+      } else if (currentPlayer.verified) { showStep('survey'); renderSurvey(); }
+      else { localStorage.removeItem('nyash_current_player'); currentPlayer = null; showStep('register'); }
+    } else { showStep('register'); }
+    if (EMAILJS_CONFIG.USE_EMAILJS) emailjs.init(EMAILJS_CONFIG.USER_ID);
   }
 
   document.addEventListener('DOMContentLoaded', initApp);
