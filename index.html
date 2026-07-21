@@ -8,11 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg: #0a0a0a;
@@ -20,7 +16,7 @@
       --text-primary: #f0f0f0;
       --text-secondary: #b0b0b0;
       --text-muted: #777777;
-      --border-light: rgba(255, 255, 255, 0.06);
+      --border-light: rgba(255,255,255,0.06);
       --radius: 28px;
       --radius-sm: 40px;
       --transition: 0.25s ease;
@@ -33,14 +29,13 @@
       justify-content: center;
       align-items: center;
       padding: 24px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', sans-serif;
       color: var(--text-primary);
-      line-height: 1.5;
       position: relative;
       overflow-x: hidden;
     }
 
-    /* ---------- Эндер-столбы (сконцентрированы в центре) ---------- */
+    /* Эндер-столбы (в центре) */
     .ender-pillars {
       position: fixed;
       top: 0;
@@ -51,29 +46,25 @@
       pointer-events: none;
       overflow: hidden;
     }
-
     .pillar {
       position: absolute;
       bottom: 0;
       width: 2px;
-      background: linear-gradient(to top, rgba(255, 255, 255, 0.0) 0%, rgba(200, 200, 255, 0.2) 50%, rgba(255, 255, 255, 0.6) 85%, rgba(255, 255, 255, 0.9) 100%);
+      background: linear-gradient(to top, rgba(255,255,255,0) 0%, rgba(200,200,255,0.2) 50%, rgba(255,255,255,0.6) 85%, rgba(255,255,255,0.9) 100%);
       border-radius: 2px;
       animation: glowPulse 4s infinite alternate ease-in-out;
-      transform-origin: bottom;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 0 40px rgba(200, 200, 255, 0.03);
+      box-shadow: 0 0 15px rgba(255,255,255,0.08), 0 0 40px rgba(200,200,255,0.03);
     }
-
     .pillar:nth-child(odd) { animation-duration: 5s; }
     .pillar:nth-child(3n) { animation-duration: 6s; animation-delay: 0.6s; }
     .pillar:nth-child(5n+2) { animation-duration: 3.8s; animation-delay: 1.2s; }
     .pillar:nth-child(7n+4) { animation-duration: 7s; animation-delay: 0.3s; }
-
     @keyframes glowPulse {
       0% { opacity: 0.25; filter: brightness(0.5); }
       100% { opacity: 0.9; filter: brightness(1.3); }
     }
 
-    /* ---------- Карточка опроса ---------- */
+    /* Карточка */
     .poll-wrapper {
       position: relative;
       z-index: 1;
@@ -84,11 +75,11 @@
       -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius);
       padding: 40px 36px 32px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
       border: 1px solid var(--border-light);
     }
 
-    /* ---------- Шапка ---------- */
+    /* Шапка */
     .header {
       display: flex;
       align-items: center;
@@ -97,188 +88,153 @@
       border-bottom: 1px solid var(--border-light);
       padding-bottom: 20px;
     }
-
-    .header .shield {
-      font-size: 2.6rem;
-      line-height: 1;
-      opacity: 0.8;
-    }
-
-    .header h1 {
-      font-size: 2.0rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--text-primary);
-    }
-
+    .header .shield { font-size: 2.6rem; opacity: 0.8; }
+    .header h1 { font-size: 2.0rem; font-weight: 700; letter-spacing: -0.5px; }
     .header .year {
       font-size: 0.9rem;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       padding: 4px 16px;
       border-radius: 40px;
       color: var(--text-secondary);
       margin-left: auto;
-      letter-spacing: 0.3px;
       border: 1px solid var(--border-light);
     }
 
-    /* ---------- Навигация ---------- */
-    .nav-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 6px 6px 6px 20px;
-      border-radius: var(--radius-sm);
-      margin: 4px 0 24px;
-      border: 1px solid var(--border-light);
+    /* Шаги */
+    .step {
+      display: none;
+      animation: fadeIn 0.4s ease;
     }
+    .step.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .nav-bar .nav-btn {
-      background: transparent;
-      border: none;
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      padding: 6px 18px;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-family: inherit;
-      line-height: 1;
-    }
-
-    .nav-bar .nav-btn:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-    }
-
-    .nav-bar .nav-btn:disabled {
-      opacity: 0.2;
-      pointer-events: none;
-    }
-
-    .nav-bar .nomination-counter {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      letter-spacing: 0.3px;
-    }
-
-    /* ---------- Блок вопроса ---------- */
-    .question-block {
-      margin-bottom: 28px;
-    }
-
-    .question-block .nomination-title {
-      font-size: 1.6rem;
+    .step-title {
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .question-block .nomination-sub {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      border-left: 3px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 24px;
+      border-left: 4px solid rgba(255,255,255,0.3);
       padding-left: 16px;
-      font-weight: 400;
     }
 
-    /* ---------- Список кандидатов ---------- */
-    .candidates {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 18px 0 24px;
+    /* Форма регистрации */
+    .form-group {
+      margin-bottom: 20px;
     }
-
-    .candidate-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: rgba(255, 255, 255, 0.04);
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+    .form-group input {
+      width: 100%;
       padding: 14px 20px;
       border-radius: var(--radius-sm);
-      border: 1.5px solid transparent;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-light);
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
+    }
+    .form-group .error {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* Опрос */
+    .nomination-item {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .nomination-item:last-child { border-bottom: none; }
+    .nomination-item .nom-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .nomination-item .nom-sub {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .candidate-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .candidate-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.03);
       transition: var(--transition);
       cursor: pointer;
     }
-
-    .candidate-item:hover {
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .candidate-item.selected {
-      background: rgba(255, 255, 255, 0.10);
-      border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .candidate-item.voted {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.2);
-      opacity: 0.8;
-      cursor: default;
-    }
-
-    .candidate-item input[type="radio"] {
+    .candidate-option:hover { background: rgba(255,255,255,0.07); }
+    .candidate-option input[type="radio"] {
       appearance: none;
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
       border-radius: 50%;
       flex-shrink: 0;
       background: transparent;
       transition: 0.15s;
-      cursor: pointer;
     }
-
-    .candidate-item input[type="radio"]:checked {
+    .candidate-option input[type="radio"]:checked {
       border-color: #fff;
       background: #fff;
-      box-shadow: inset 0 0 0 6px #0a0a0a, 0 0 0 1px #fff;
+      box-shadow: inset 0 0 0 5px #0a0a0a, 0 0 0 1px #fff;
     }
+    .candidate-option label { flex: 1; cursor: pointer; }
 
-    .candidate-item.voted input[type="radio"] {
-      display: none;
-    }
-
-    .candidate-item label {
-      flex: 1;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      cursor: pointer;
-      letter-spacing: -0.2px;
-    }
-
-    .candidate-item.voted label {
-      cursor: default;
-    }
-
-    .candidate-item .vote-badge {
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 14px;
-      border-radius: 40px;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-light);
-    }
-
-    /* ---------- Кнопка ---------- */
-    .action-bar {
+    .custom-answer {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      justify-content: flex-start;
-      gap: 16px;
-      margin-top: 4px;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.03);
+    }
+    .custom-answer input[type="text"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-light);
+      padding: 6px 0;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    .custom-answer input[type="text"]:focus {
+      outline: none;
+      border-bottom-color: rgba(255,255,255,0.5);
+    }
+    .custom-answer .custom-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
     }
 
+    .nomination-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Кнопки */
     .btn {
       border: none;
       padding: 14px 36px;
@@ -289,84 +245,130 @@
       cursor: pointer;
       transition: var(--transition);
       letter-spacing: 0.3px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255,255,255,0.06);
       color: var(--text-primary);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-light);
     }
-
     .btn-primary {
-      background: #ffffff;
+      background: #fff;
       color: #0a0a0a;
-      border-color: #ffffff;
+      border-color: #fff;
     }
-
     .btn-primary:hover:not(:disabled) {
       background: #e0e0e0;
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(255,255,255,0.1);
     }
-
-    .btn-primary:active:not(:disabled) {
-      transform: translateY(0px);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
-    /* ---------- Статус ---------- */
-    .status-message {
-      margin-top: 22px;
-      padding: 14px 20px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: var(--radius-sm);
+    .btn-primary:disabled { opacity: 0.3; pointer-events: none; }
+    .btn-secondary {
+      background: transparent;
+      border-color: rgba(255,255,255,0.15);
       color: var(--text-secondary);
-      font-weight: 500;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.3);
+    }
+    .btn-sm { padding: 10px 20px; font-size: 0.85rem; }
+
+    /* Админ-панель */
+    .admin-panel {
+      margin-top: 30px;
+      border-top: 1px solid var(--border-light);
+      padding-top: 20px;
+    }
+    .admin-panel .admin-toggle {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .admin-panel .admin-toggle button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+    .admin-panel .admin-toggle button:hover { color: #fff; }
+
+    .admin-content {
+      display: none;
+      margin-top: 20px;
+    }
+    .admin-content.active { display: block; }
+
+    .admin-login {
       display: flex;
-      justify-content: space-between;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      border: 1px solid var(--border-light);
     }
+    .admin-login input {
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-light);
+      color: #fff;
+      font-family: inherit;
+      flex: 1;
+    }
+    .admin-login input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
 
-    .status-message .hint {
-      font-weight: 400;
-      color: var(--text-muted);
+    .admin-table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.9rem;
     }
-
-    .footer {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border-light);
-      padding-top: 18px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+    th, td {
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      text-align: left;
+      vertical-align: top;
     }
+    th {
+      background: rgba(255,255,255,0.04);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    td { color: var(--text-primary); }
+    .admin-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Финал */
+    .final-message {
+      text-align: center;
+      padding: 30px 0;
+    }
+    .final-message .big-icon { font-size: 4rem; }
+    .final-message h2 { font-size: 2rem; margin: 16px 0; }
+    .final-message p { color: var(--text-secondary); }
+
+    /* Прочее */
+    .mt-20 { margin-top: 20px; }
+    .mb-10 { margin-bottom: 10px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 
     @media (max-width: 600px) {
       .poll-wrapper { padding: 24px 16px; }
       .header h1 { font-size: 1.5rem; }
       .header .shield { font-size: 2rem; }
-      .nav-bar { flex-wrap: wrap; justify-content: center; gap: 6px; }
-      .candidate-item { padding: 12px 16px; }
-      .candidate-item label { font-size: 0.95rem; }
       .btn { padding: 12px 24px; font-size: 0.9rem; width: 100%; justify-content: center; }
-      .action-bar { flex-direction: column; align-items: stretch; }
-      .status-message { flex-direction: column; align-items: flex-start; }
+      .flex-between { flex-direction: column; align-items: stretch; }
+      .admin-login { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<!-- Фоновые эндер-столбы (сконцентрированы в центре) -->
 <div class="ender-pillars" id="pillarsContainer"></div>
 
 <div class="poll-wrapper">
@@ -376,43 +378,81 @@
     <span class="year">2026</span>
   </div>
 
-  <div class="nav-bar">
-    <button class="nav-btn" id="prevNomBtn">‹</button>
-    <span class="nomination-counter" id="nomCounter">1 / 14</span>
-    <button class="nav-btn" id="nextNomBtn">›</button>
+  <!-- ШАГ 1: Регистрация -->
+  <div class="step active" id="stepRegister">
+    <div class="step-title">✏️ Представьтесь</div>
+    <div class="form-group">
+      <label>Ваш ник на сервере</label>
+      <input type="text" id="playerNick" placeholder="Введите ник" />
+      <div class="error" id="nickError"></div>
+    </div>
+    <div class="form-group">
+      <label>Ваша почта</label>
+      <input type="email" id="playerEmail" placeholder="example@mail.com" />
+      <div class="error" id="emailError"></div>
+    </div>
+    <button class="btn btn-primary" id="startSurveyBtn">Начать опрос →</button>
   </div>
 
-  <div class="question-block">
-    <div class="nomination-title" id="nomTitle">🏆 Номинация</div>
-    <div class="nomination-sub" id="nomSub">Выберите одного кандидата</div>
+  <!-- ШАГ 2: Опрос -->
+  <div class="step" id="stepSurvey">
+    <div class="step-title">📋 Опрос</div>
+    <div id="surveyContainer"></div>
+    <div class="flex-between mt-20">
+      <span id="progressText" style="color: var(--text-secondary);">0 / 14</span>
+      <button class="btn btn-primary" id="submitSurveyBtn" disabled>Завершить опрос</button>
+    </div>
   </div>
 
-  <div class="candidates" id="candidatesContainer"></div>
-
-  <div class="action-bar">
-    <button class="btn btn-primary" id="voteBtn">Голосовать</button>
+  <!-- ШАГ 3: Финал -->
+  <div class="step" id="stepFinal">
+    <div class="final-message">
+      <div class="big-icon">🎉</div>
+      <h2>Вы приглашены на Nyash Awards!</h2>
+      <p>Спасибо за ваши ответы. Ждём вас на церемонии!</p>
+      <button class="btn btn-secondary mt-20" id="resetAllBtn">Пройти опрос заново (сброс)</button>
+    </div>
   </div>
 
-  <div class="status-message">
-    <span id="statusText">💡 Выберите кандидата и нажмите «Голосовать»</span>
-    <span class="hint" id="selectedHint">—</span>
+  <!-- Админ-панель -->
+  <div class="admin-panel">
+    <div class="admin-toggle">
+      <button id="adminToggleBtn">🔐 Админ-панель</button>
+    </div>
+    <div class="admin-content" id="adminContent">
+      <div class="admin-login" id="adminLogin">
+        <input type="password" id="adminPassword" placeholder="Введите пароль" />
+        <button class="btn btn-secondary btn-sm" id="adminLoginBtn">Войти</button>
+        <span id="adminLoginError" style="color: #ff6b6b; font-size: 0.85rem;"></span>
+      </div>
+      <div id="adminDashboard" style="display: none;">
+        <h3 style="margin: 16px 0 8px;">Список участников</h3>
+        <div class="admin-table-wrap">
+          <table id="adminTable">
+            <thead><tr><th>Ник</th><th>Почта</th><th>Ответы</th></tr></thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-secondary btn-sm" id="exportJsonBtn">📥 Скачать JSON</button>
+          <button class="btn btn-secondary btn-sm" id="adminLogoutBtn">Выйти</button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="footer">анонимное голосование · один голос в номинации</div>
 </div>
 
 <script>
-  // ============================================================
-  //  1. Генерация эндер-столбов (сконцентрированы в центре)
-  // ============================================================
+  // =============================================================
+  //  1. Генерация эндер-столбов (центрированы)
+  // =============================================================
   (function createPillars() {
     const container = document.getElementById('pillarsContainer');
     const count = 18;
     for (let i = 0; i < count; i++) {
       const pillar = document.createElement('div');
       pillar.className = 'pillar';
-      // Центрируем: left от 20% до 80%
-      const left = 15 + Math.random() * 70; // 15-85%
+      const left = 15 + Math.random() * 70;
       const height = 30 + Math.random() * 70;
       const width = 1.5 + Math.random() * 3;
       const delay = (Math.random() * 6).toFixed(2);
@@ -426,347 +466,473 @@
     }
   })();
 
-  // ============================================================
-  //  2. НОМИНАЦИИ (14 штук)
-  // ============================================================
+  // =============================================================
+  //  2. Данные номинаций (14 штук)
+  // =============================================================
   const NOMINATIONS = [
-    {
-      id: 'best_player',
-      title: '🏅 Лучший игрок сезона',
-      subtitle: 'Кто показал наилучшую игру?',
-      candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro']
-    },
-    {
-      id: 'best_builder',
-      title: '🏗️ Лучший строитель',
-      subtitle: 'Чьи постройки впечатлили всех?',
-      candidates: ['PixelArtisan', 'BlockWizard', 'MegaBuild', 'ArchitectFox']
-    },
-    {
-      id: 'best_pvp',
-      title: '⚔️ Лучший PvP-игрок',
-      subtitle: 'Кто сильнейший на арене?',
-      candidates: ['KillerBee', 'PvPKing', 'ArenaMaster', 'StrikerX']
-    },
-    {
-      id: 'best_event',
-      title: '🎉 Лучший ивент сезона',
-      subtitle: 'Какое событие вам запомнилось?',
-      candidates: ['Охота на дракона', 'Турнир лучников', 'Постройка города', 'Новогодний карнавал']
-    },
-    {
-      id: 'best_art',
-      title: '🎨 Человек искусства',
-      subtitle: 'Кто создал самый красивый арт?',
-      candidates: ['ArtMage', 'PixelPainter', 'SketchMaster', 'ColorWeaver']
-    },
-    {
-      id: 'best_admin',
-      title: '🛡️ Лучший администратор',
-      subtitle: 'Кто внёс наибольший вклад в порядок?',
-      candidates: ['Admin_Prime', 'GuardianX', 'CraftManager', 'RuleKeeper']
-    },
-    {
-      id: 'best_pve',
-      title: '🧟 Лучший PvE-игрок',
-      subtitle: 'Кто покорял данжи и боссов?',
-      candidates: ['DungeonCrawler', 'BossSlayer', 'MobMaster', 'RaidLeader']
-    },
-    {
-      id: 'best_noob',
-      title: '🌱 Лучший новичок',
-      subtitle: 'Кто быстро вырос и впечатлил?',
-      candidates: ['NewbiePro', 'FreshStart', 'RookieStar', 'BeginnerKing']
-    },
-    {
-      id: 'best_project',
-      title: '📐 Лучший проект',
-      subtitle: 'Какое коллективное творение достойно награды?',
-      candidates: ['Подземный город', 'Летающий остров', 'Аквапарк', 'Храм солнца']
-    },
-    {
-      id: 'best_farming',
-      title: '🌾 Лучший фармер',
-      subtitle: 'Кто собрал больше всего ресурсов?',
-      candidates: ['FarmLord', 'HarvestKing', 'CropMaster', 'MinerPro']
-    },
-    {
-      id: 'best_redstone',
-      title: '🔌 Лучший редстоун-инженер',
-      subtitle: 'Чьи механизмы поражают воображение?',
-      candidates: ['RedstoneWiz', 'LogicMaster', 'CircuitPro', 'MechBuilder']
-    },
-    {
-      id: 'best_team',
-      title: '🤝 Лучшая PvE-команда',
-      subtitle: 'Какая команда показала лучшую слаженность?',
-      candidates: ['DragonSlayers', 'ShadowCrew', 'PhoenixRaid', 'IronClan']
-    },
-    {
-      id: 'best_guildmaster',
-      title: '🏰 Лучший глава гильдии',
-      subtitle: 'Кто вдохновляет и объединяет игроков?',
-      candidates: ['GuildMaster_1', 'LeaderPro', 'ClanChief', 'OrderKeeper']
-    },
-    {
-      id: 'best_active',
-      title: '🔥 Самый активный игрок',
-      subtitle: 'Кто был на сервере чаще всех?',
-      candidates: ['AlwaysOnline', 'NoLifeKing', 'GrindMachine', 'ActivityStar']
-    }
+    { id: 'best_player', title: '🏅 Лучший игрок сезона', subtitle: 'Кто показал наилучшую игру?', candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro'] },
+    { id: 'best_builder', title: '🏗️ Лучший строитель', subtitle: 'Чьи постройки впечатлили всех?', candidates: ['PixelArtisan', 'BlockWizard', 'MegaBuild', 'ArchitectFox'] },
+    { id: 'best_pvp', title: '⚔️ Лучший PvP-игрок', subtitle: 'Кто сильнейший на арене?', candidates: ['KillerBee', 'PvPKing', 'ArenaMaster', 'StrikerX'] },
+    { id: 'best_event', title: '🎉 Лучший ивент сезона', subtitle: 'Какое событие вам запомнилось?', candidates: ['Охота на дракона', 'Турнир лучников', 'Постройка города', 'Новогодний карнавал'] },
+    { id: 'best_art', title: '🎨 Человек искусства', subtitle: 'Кто создал самый красивый арт?', candidates: ['ArtMage', 'PixelPainter', 'SketchMaster', 'ColorWeaver'] },
+    { id: 'best_admin', title: '🛡️ Лучший администратор', subtitle: 'Кто внёс наибольший вклад в порядок?', candidates: ['Admin_Prime', 'GuardianX', 'CraftManager', 'RuleKeeper'] },
+    { id: 'best_pve', title: '🧟 Лучший PvE-игрок', subtitle: 'Кто покорял данжи и боссов?', candidates: ['DungeonCrawler', 'BossSlayer', 'MobMaster', 'RaidLeader'] },
+    { id: 'best_noob', title: '🌱 Лучший новичок', subtitle: 'Кто быстро вырос и впечатлил?', candidates: ['NewbiePro', 'FreshStart', 'RookieStar', 'BeginnerKing'] },
+    { id: 'best_project', title: '📐 Лучший проект', subtitle: 'Какое коллективное творение достойно награды?', candidates: ['Подземный город', 'Летающий остров', 'Аквапарк', 'Храм солнца'] },
+    { id: 'best_farming', title: '🌾 Лучший фармер', subtitle: 'Кто собрал больше всего ресурсов?', candidates: ['FarmLord', 'HarvestKing', 'CropMaster', 'MinerPro'] },
+    { id: 'best_redstone', title: '🔌 Лучший редстоун-инженер', subtitle: 'Чьи механизмы поражают воображение?', candidates: ['RedstoneWiz', 'LogicMaster', 'CircuitPro', 'MechBuilder'] },
+    { id: 'best_team', title: '🤝 Лучшая PvE-команда', subtitle: 'Какая команда показала лучшую слаженность?', candidates: ['DragonSlayers', 'ShadowCrew', 'PhoenixRaid', 'IronClan'] },
+    { id: 'best_guildmaster', title: '🏰 Лучший глава гильдии', subtitle: 'Кто вдохновляет и объединяет игроков?', candidates: ['GuildMaster_1', 'LeaderPro', 'ClanChief', 'OrderKeeper'] },
+    { id: 'best_active', title: '🔥 Самый активный игрок', subtitle: 'Кто был на сервере чаще всех?', candidates: ['AlwaysOnline', 'NoLifeKing', 'GrindMachine', 'ActivityStar'] }
   ];
 
-  // ============================================================
-  //  3. Логика голосования (одноразово)
-  // ============================================================
-  let currentNomIndex = 0;
-  let selectedCandidateId = null;
-  let votes = {};             // { nomId: [число голосов] }
-  let userVotes = {};         // { nomId: индекс_выбранного_кандидата } – для отслеживания, за кого проголосовал пользователь
+  // =============================================================
+  //  3. Состояние приложения
+  // =============================================================
+  const ADMIN_PASSWORD = 'admin123'; // ← смените на свой
 
-  const STORAGE_KEY_VOTES = 'nyash_votes';
-  const STORAGE_KEY_USER = 'nyash_user_votes';
+  let currentPlayer = null;          // { nick, email, answers: { nomId: { type, value } } }
+  let allPlayers = [];              // массив объектов { nick, email, answers }
+  let currentStep = 'register';     // 'register' | 'survey' | 'final'
 
-  // DOM элементы
-  const nomTitle = document.getElementById('nomTitle');
-  const nomSub = document.getElementById('nomSub');
-  const candidatesContainer = document.getElementById('candidatesContainer');
-  const voteBtn = document.getElementById('voteBtn');
-  const prevNomBtn = document.getElementById('prevNomBtn');
-  const nextNomBtn = document.getElementById('nextNomBtn');
-  const nomCounter = document.getElementById('nomCounter');
-  const statusText = document.getElementById('statusText');
-  const selectedHint = document.getElementById('selectedHint');
+  // DOM-элементы
+  const stepRegister = document.getElementById('stepRegister');
+  const stepSurvey = document.getElementById('stepSurvey');
+  const stepFinal = document.getElementById('stepFinal');
+  const playerNick = document.getElementById('playerNick');
+  const playerEmail = document.getElementById('playerEmail');
+  const nickError = document.getElementById('nickError');
+  const emailError = document.getElementById('emailError');
+  const startBtn = document.getElementById('startSurveyBtn');
+  const surveyContainer = document.getElementById('surveyContainer');
+  const progressText = document.getElementById('progressText');
+  const submitBtn = document.getElementById('submitSurveyBtn');
+  const resetAllBtn = document.getElementById('resetAllBtn');
+  const adminToggleBtn = document.getElementById('adminToggleBtn');
+  const adminContent = document.getElementById('adminContent');
+  const adminLogin = document.getElementById('adminLogin');
+  const adminDashboard = document.getElementById('adminDashboard');
+  const adminPassword = document.getElementById('adminPassword');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminLoginError = document.getElementById('adminLoginError');
+  const adminTableBody = document.getElementById('adminTableBody');
+  const exportJsonBtn = document.getElementById('exportJsonBtn');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
-  // Загрузка данных
-  function loadData() {
-    // Загрузка голосов (суммарных)
-    const storedVotes = localStorage.getItem(STORAGE_KEY_VOTES);
-    if (storedVotes) {
-      try {
-        const parsed = JSON.parse(storedVotes);
-        let valid = true;
-        for (const nom of NOMINATIONS) {
-          if (!Array.isArray(parsed[nom.id]) || parsed[nom.id].length !== nom.candidates.length) {
-            valid = false;
-            break;
-          }
-        }
-        if (valid) { votes = parsed; }
-      } catch (e) {}
+  // =============================================================
+  //  4. Загрузка / сохранение данных
+  // =============================================================
+  function loadAllPlayers() {
+    const stored = localStorage.getItem('nyash_all_players');
+    if (stored) {
+      try { allPlayers = JSON.parse(stored); } catch(e) { allPlayers = []; }
+    } else {
+      allPlayers = [];
     }
-    if (!votes || Object.keys(votes).length === 0) {
-      votes = {};
-      for (const nom of NOMINATIONS) {
-        votes[nom.id] = new Array(nom.candidates.length).fill(0);
-      }
+  }
+
+  function saveAllPlayers() {
+    localStorage.setItem('nyash_all_players', JSON.stringify(allPlayers));
+  }
+
+  function loadCurrentPlayer() {
+    const stored = localStorage.getItem('nyash_current_player');
+    if (stored) {
+      try { currentPlayer = JSON.parse(stored); } catch(e) { currentPlayer = null; }
+    } else {
+      currentPlayer = null;
     }
+  }
 
-    // Загрузка пользовательских голосов
-    const storedUser = localStorage.getItem(STORAGE_KEY_USER);
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        // Проверим, что ключи соответствуют номинациям
-        let valid = true;
-        for (const nom of NOMINATIONS) {
-          if (parsed[nom.id] !== undefined && (typeof parsed[nom.id] !== 'number' || parsed[nom.id] < 0 || parsed[nom.id] >= nom.candidates.length)) {
-            valid = false;
-            break;
-          }
-        }
-        if (valid) { userVotes = parsed; }
-      } catch (e) {}
+  function saveCurrentPlayer() {
+    if (currentPlayer) {
+      localStorage.setItem('nyash_current_player', JSON.stringify(currentPlayer));
+    } else {
+      localStorage.removeItem('nyash_current_player');
     }
-    if (!userVotes || Object.keys(userVotes).length === 0) {
-      userVotes = {};
-      // Не заполняем, только при голосовании
-    }
-    saveData();
   }
 
-  function saveData() {
-    localStorage.setItem(STORAGE_KEY_VOTES, JSON.stringify(votes));
-    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(userVotes));
+  // Проверка, существует ли игрок с таким ником или почтой
+  function findPlayerByNickOrEmail(nick, email) {
+    return allPlayers.find(p => p.nick.toLowerCase() === nick.toLowerCase() || p.email.toLowerCase() === email.toLowerCase());
   }
 
-  function getCurrentNom() { return NOMINATIONS[currentNomIndex]; }
-  function getCurrentVotes() {
-    const nom = getCurrentNom();
-    return votes[nom.id] || new Array(nom.candidates.length).fill(0);
+  // =============================================================
+  //  5. Переключение шагов
+  // =============================================================
+  function showStep(step) {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    if (step === 'register') stepRegister.classList.add('active');
+    else if (step === 'survey') stepSurvey.classList.add('active');
+    else if (step === 'final') stepFinal.classList.add('active');
+    currentStep = step;
   }
 
-  // Проверка, голосовал ли пользователь в текущей номинации
-  function hasUserVoted() {
-    const nom = getCurrentNom();
-    return userVotes[nom.id] !== undefined && userVotes[nom.id] !== null;
-  }
+  // =============================================================
+  //  6. Рендеринг опроса
+  // =============================================================
+  function renderSurvey() {
+    if (!currentPlayer) return;
+    const answers = currentPlayer.answers || {};
+    let html = '';
+    let answeredCount = 0;
 
-  // Получить индекс выбранного пользователем кандидата (если голосовал)
-  function getUserVoteIndex() {
-    const nom = getCurrentNom();
-    return userVotes[nom.id];
-  }
+    NOMINATIONS.forEach((nom, idx) => {
+      const answer = answers[nom.id] || null;
+      const isAnswered = answer !== null;
+      if (isAnswered) answeredCount++;
 
-  // Отрисовка
-  function render() {
-    const nom = getCurrentNom();
-    const currentVotes = getCurrentVotes();
-    const userVoted = hasUserVoted();
-    const userChoice = userVoted ? getUserVoteIndex() : null;
+      html += `<div class="nomination-item" data-nom-id="${nom.id}">`;
+      html += `<div class="nom-title">${nom.title}</div>`;
+      html += `<div class="nom-sub">${nom.subtitle}</div>`;
 
-    nomTitle.textContent = nom.title;
-    nomSub.textContent = nom.subtitle;
-    nomCounter.textContent = `${currentNomIndex + 1} / ${NOMINATIONS.length}`;
-    prevNomBtn.disabled = (currentNomIndex === 0);
-    nextNomBtn.disabled = (currentNomIndex === NOMINATIONS.length - 1);
+      // Варианты кандидатов
+      html += `<div class="candidate-options">`;
+      nom.candidates.forEach(cand => {
+        const checked = (answer && answer.type === 'candidate' && answer.value === cand) ? 'checked' : '';
+        html += `
+          <div class="candidate-option">
+            <input type="radio" name="nom_${nom.id}" value="${cand}" ${checked} data-nom="${nom.id}" />
+            <label>${cand}</label>
+          </div>
+        `;
+      });
+      html += `</div>`;
 
-    // Сброс выбора, если пользователь уже голосовал – скрываем радио
-    selectedCandidateId = null; // сбрасываем, потом установим только если можно
+      // Свой вариант
+      const customVal = (answer && answer.type === 'custom') ? answer.value : '';
+      html += `
+        <div class="custom-answer">
+          <span class="custom-label">Свой вариант:</span>
+          <input type="text" class="custom-input" data-nom="${nom.id}" placeholder="Напишите свой ответ" value="${customVal}" />
+        </div>
+      `;
 
-    candidatesContainer.innerHTML = '';
-    nom.candidates.forEach((candidate, idx) => {
-      const isSelected = (selectedCandidateId === idx);
-      const isVoted = userVoted && (userChoice === idx);
-      const item = document.createElement('div');
-      item.className = `candidate-item${isSelected ? ' selected' : ''}${isVoted ? ' voted' : ''}`;
-
-      if (isVoted) {
-        // Если уже проголосовали за этого кандидата – показываем бейдж
-        const badge = document.createElement('span');
-        badge.className = 'vote-badge';
-        badge.textContent = '✓ Ваш голос';
-        // Добавим радио? Нет, прячем.
-        const label = document.createElement('label');
-        label.textContent = candidate;
-        item.appendChild(label);
-        item.appendChild(badge);
-        // Делаем неактивным
-        item.style.cursor = 'default';
-      } else {
-        // Обычный вариант с радио
-        const radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'candidate';
-        radio.value = idx;
-        radio.checked = isSelected;
-        radio.id = `cand_${idx}`;
-        // Если пользователь уже голосовал – блокируем радио
-        if (userVoted) {
-          radio.disabled = true;
-        }
-
-        const label = document.createElement('label');
-        label.htmlFor = `cand_${idx}`;
-        label.textContent = candidate;
-
-        item.appendChild(radio);
-        item.appendChild(label);
-
-        if (!userVoted) {
-          // Клик по строке только если не проголосовал
-          item.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'INPUT' && !userVoted) {
-              radio.checked = true;
-              const ev = new Event('change', { bubbles: true });
-              radio.dispatchEvent(ev);
-            }
-          });
-
-          radio.addEventListener('change', (e) => {
-            if (e.target.checked && !userVoted) {
-              document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-              item.classList.add('selected');
-              selectedCandidateId = idx;
-              selectedHint.textContent = `✅ «${candidate}»`;
-              voteBtn.disabled = false;
-              statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
-            }
-          });
-        } else {
-          // Если уже проголосовал – радио отключено, ничего не делаем
-          radio.disabled = true;
-        }
-      }
-
-      candidatesContainer.appendChild(item);
+      html += `<div class="nomination-status">${isAnswered ? '✅ Отвечено' : '⏳ Ожидает ответа'}</div>`;
+      html += `</div>`;
     });
 
-    // Если пользователь уже голосовал в этой номинации
-    if (userVoted) {
-      const chosenName = nom.candidates[userChoice];
-      voteBtn.disabled = true;
-      selectedHint.textContent = `🔒 Вы уже проголосовали за «${chosenName}»`;
-      statusText.textContent = '✅ Ваш голос учтён. Вы не можете изменить выбор.';
-      // Скрываем radio (уже скрыты через класс .voted)
-    } else {
-      // Не голосовал
-      if (selectedCandidateId === null) {
-        voteBtn.disabled = true;
-        selectedHint.textContent = '—';
-        statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
-      } else {
-        voteBtn.disabled = false;
-        statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
+    surveyContainer.innerHTML = html;
+    progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
+    submitBtn.disabled = (answeredCount < NOMINATIONS.length);
+
+    // --- Привязка событий ---
+    // Радио-кнопки: при выборе очищаем custom поле для этой номинации
+    document.querySelectorAll('.candidate-option input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const nomId = this.dataset.nom;
+        const customInput = document.querySelector(`.custom-input[data-nom="${nomId}"]`);
+        if (this.checked) {
+          customInput.value = '';
+          // Сохраняем ответ
+          saveAnswer(nomId, { type: 'candidate', value: this.value });
+        }
+      });
+    });
+
+    // Кастомные поля: при вводе снимаем выбор радио
+    document.querySelectorAll('.custom-input').forEach(input => {
+      input.addEventListener('input', function() {
+        const nomId = this.dataset.nom;
+        const radios = document.querySelectorAll(`input[name="nom_${nomId}"]`);
+        radios.forEach(r => r.checked = false);
+        // Сохраняем ответ, если поле не пустое
+        const val = this.value.trim();
+        if (val) {
+          saveAnswer(nomId, { type: 'custom', value: val });
+        } else {
+          // Если пустое – удаляем ответ
+          removeAnswer(nomId);
+        }
+        // Обновляем статусы
+        updateSurveyStatus();
+      });
+    });
+
+    // Дополнительно: при клике на радио уже сохраняется, но нам нужно обновить статус
+    // Обновим статус при загрузке
+    updateSurveyStatus();
+  }
+
+  function saveAnswer(nomId, answer) {
+    if (!currentPlayer) return;
+    if (!currentPlayer.answers) currentPlayer.answers = {};
+    currentPlayer.answers[nomId] = answer;
+    saveCurrentPlayer();
+    // Также обновляем запись в allPlayers (если существует)
+    const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
+    if (idx !== -1) {
+      allPlayers[idx].answers = currentPlayer.answers;
+      saveAllPlayers();
+    }
+    updateSurveyStatus();
+  }
+
+  function removeAnswer(nomId) {
+    if (!currentPlayer) return;
+    if (currentPlayer.answers) {
+      delete currentPlayer.answers[nomId];
+      saveCurrentPlayer();
+      const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
+      if (idx !== -1) {
+        allPlayers[idx].answers = currentPlayer.answers;
+        saveAllPlayers();
       }
     }
-
-    saveData();
+    updateSurveyStatus();
   }
 
-  // Голосование
-  function handleVote() {
-    if (selectedCandidateId === null) return;
-    const nom = getCurrentNom();
-    if (hasUserVoted()) {
-      // Уже проголосовал – не даём повторно
-      statusText.textContent = '⚠️ Вы уже проголосовали в этой номинации!';
+  function updateSurveyStatus() {
+    if (!currentPlayer) return;
+    const answers = currentPlayer.answers || {};
+    let answeredCount = 0;
+    NOMINATIONS.forEach(nom => {
+      if (answers[nom.id]) answeredCount++;
+    });
+    progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
+    submitBtn.disabled = (answeredCount < NOMINATIONS.length);
+    // Обновляем статусы под каждой номинацией
+    document.querySelectorAll('.nomination-item').forEach(item => {
+      const nomId = item.dataset.nomId;
+      const statusDiv = item.querySelector('.nomination-status');
+      if (statusDiv) {
+        if (answers[nomId]) {
+          statusDiv.textContent = '✅ Отвечено';
+        } else {
+          statusDiv.textContent = '⏳ Ожидает ответа';
+        }
+      }
+    });
+  }
+
+  // =============================================================
+  //  7. Завершение опроса
+  // =============================================================
+  function finishSurvey() {
+    if (!currentPlayer) return;
+    const answers = currentPlayer.answers || {};
+    const allAnswered = NOMINATIONS.every(nom => answers[nom.id] !== undefined && answers[nom.id] !== null);
+    if (!allAnswered) {
+      alert('Ответьте на все вопросы!');
       return;
     }
-
-    // Сохраняем голос в общую статистику
-    const currentVotes = votes[nom.id];
-    if (!currentVotes) return;
-    currentVotes[selectedCandidateId] += 1;
-
-    // Сохраняем выбор пользователя
-    userVotes[nom.id] = selectedCandidateId;
-
-    // Сбрасываем выбор
-    selectedCandidateId = null;
-    document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
-    document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-
-    saveData();
-    render(); // перерисовываем с новым состоянием
+    // Помечаем игрока как завершившего опрос
+    currentPlayer.completed = true;
+    saveCurrentPlayer();
+    // Обновляем в allPlayers
+    const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
+    if (idx !== -1) {
+      allPlayers[idx].completed = true;
+      saveAllPlayers();
+    }
+    showStep('final');
   }
 
-  // Навигация
-  function goToNom(index) {
-    if (index < 0 || index >= NOMINATIONS.length) return;
-    currentNomIndex = index;
-    // Сбрасываем выделение, но если пользователь уже голосовал – всё равно отобразится
-    selectedCandidateId = null;
-    document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
-    document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-    voteBtn.disabled = true;
-    selectedHint.textContent = '—';
-    statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
-    render();
+  // =============================================================
+  //  8. Сброс (начать заново)
+  // =============================================================
+  function resetAll() {
+    if (confirm('Вы уверены? Все ваши ответы будут удалены.')) {
+      localStorage.removeItem('nyash_current_player');
+      currentPlayer = null;
+      // Не удаляем allPlayers, чтобы администратор видел все ответы
+      // Но можно удалить текущего игрока из allPlayers (по желанию)
+      showStep('register');
+      // Очищаем поля
+      playerNick.value = '';
+      playerEmail.value = '';
+      nickError.textContent = '';
+      emailError.textContent = '';
+    }
   }
 
-  function init() {
-    loadData();
-    currentNomIndex = 0;
-    selectedCandidateId = null;
-    render();
+  // =============================================================
+  //  9. Админ-панель
+  // =============================================================
+  let adminLoggedIn = false;
 
-    voteBtn.addEventListener('click', handleVote);
-    prevNomBtn.addEventListener('click', () => goToNom(currentNomIndex - 1));
-    nextNomBtn.addEventListener('click', () => goToNom(currentNomIndex + 1));
+  function renderAdminTable() {
+    const tbody = adminTableBody;
+    tbody.innerHTML = '';
+    if (allPlayers.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color: var(--text-muted);">Нет данных</td></tr>';
+      return;
+    }
+    allPlayers.forEach(p => {
+      const tr = document.createElement('tr');
+      // Ник и почта
+      tr.innerHTML = `<td>${p.nick}</td><td>${p.email}</td>`;
+      // Ответы
+      let answersHtml = '';
+      if (p.answers) {
+        NOMINATIONS.forEach(nom => {
+          const a = p.answers[nom.id];
+          if (a) {
+            const val = a.type === 'candidate' ? a.value : `(свой) ${a.value}`;
+            answersHtml += `<div><strong>${nom.title}</strong>: ${val}</div>`;
+          } else {
+            answersHtml += `<div><strong>${nom.title}</strong>: <span style="color:var(--text-muted);">не отвечено</span></div>`;
+          }
+        });
+      } else {
+        answersHtml = '<span style="color:var(--text-muted);">нет ответов</span>';
+      }
+      const td = document.createElement('td');
+      td.innerHTML = answersHtml;
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
   }
 
-  init();
+  function exportJson() {
+    const data = JSON.stringify(allPlayers, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nyash_awards_data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function adminLoginHandler() {
+    const pass = adminPassword.value.trim();
+    if (pass === ADMIN_PASSWORD) {
+      adminLoggedIn = true;
+      adminLogin.style.display = 'none';
+      adminDashboard.style.display = 'block';
+      adminLoginError.textContent = '';
+      renderAdminTable();
+    } else {
+      adminLoginError.textContent = 'Неверный пароль';
+    }
+  }
+
+  function adminLogout() {
+    adminLoggedIn = false;
+    adminLogin.style.display = 'flex';
+    adminDashboard.style.display = 'none';
+    adminPassword.value = '';
+    adminLoginError.textContent = '';
+    adminContent.classList.remove('active');
+    adminToggleBtn.textContent = '🔐 Админ-панель';
+  }
+
+  // =============================================================
+  //  10. Инициализация приложения
+  // =============================================================
+  function initApp() {
+    loadAllPlayers();
+    loadCurrentPlayer();
+
+    // Проверяем, есть ли текущий игрок и завершён ли он
+    if (currentPlayer) {
+      if (currentPlayer.completed) {
+        showStep('final');
+      } else {
+        // Проверяем, есть ли у него ответы
+        showStep('survey');
+        renderSurvey();
+      }
+    } else {
+      showStep('register');
+    }
+
+    // --- Обработчики ---
+
+    // Регистрация
+    startBtn.addEventListener('click', function() {
+      const nick = playerNick.value.trim();
+      const email = playerEmail.value.trim();
+      let valid = true;
+      nickError.textContent = '';
+      emailError.textContent = '';
+
+      if (!nick) {
+        nickError.textContent = 'Введите ник';
+        valid = false;
+      }
+      if (!email) {
+        emailError.textContent = 'Введите почту';
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.textContent = 'Введите корректную почту (например, name@domain.com)';
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      // Проверяем, существует ли уже игрок с таким ником или почтой
+      const existing = findPlayerByNickOrEmail(nick, email);
+      if (existing) {
+        // Если уже есть, но не завершён – загружаем его как текущего
+        // Если завершён – показываем финал
+        if (existing.completed) {
+          alert('Вы уже проходили опрос!');
+          currentPlayer = existing;
+          saveCurrentPlayer();
+          showStep('final');
+          return;
+        } else {
+          // Загружаем существующего незавершённого
+          currentPlayer = existing;
+          saveCurrentPlayer();
+          showStep('survey');
+          renderSurvey();
+          return;
+        }
+      }
+
+      // Новый игрок
+      currentPlayer = {
+        nick: nick,
+        email: email,
+        answers: {},
+        completed: false
+      };
+      allPlayers.push(currentPlayer);
+      saveAllPlayers();
+      saveCurrentPlayer();
+
+      showStep('survey');
+      renderSurvey();
+    });
+
+    // Завершение опроса
+    submitBtn.addEventListener('click', finishSurvey);
+
+    // Сброс
+    resetAllBtn.addEventListener('click', resetAll);
+
+    // Админ-панель: отображение/скрытие
+    adminToggleBtn.addEventListener('click', function() {
+      const isActive = adminContent.classList.toggle('active');
+      if (isActive) {
+        adminToggleBtn.textContent = '🔒 Скрыть админ-панель';
+        if (!adminLoggedIn) {
+          adminLogin.style.display = 'flex';
+          adminDashboard.style.display = 'none';
+        } else {
+          adminLogin.style.display = 'none';
+          adminDashboard.style.display = 'block';
+          renderAdminTable();
+        }
+      } else {
+        adminToggleBtn.textContent = '🔐 Админ-панель';
+        adminLogout();
+      }
+    });
+
+    adminLoginBtn.addEventListener('click', adminLoginHandler);
+    adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminLoginHandler(); });
+    adminLogoutBtn.addEventListener('click', adminLogout);
+    exportJsonBtn.addEventListener('click', exportJson);
+
+    // Если админ уже был залогинен при загрузке (сохраняем состояние в сессии?) – не сохраняем.
+  }
+
+  // Запуск
+  document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
 </html>
