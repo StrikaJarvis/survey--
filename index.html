@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shield Awards · Голосование</title>
+  <title>Nyash Awards · Голосование</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
@@ -40,7 +40,7 @@
       overflow-x: hidden;
     }
 
-    /* ---------- Эндер-столбы (фон) ---------- */
+    /* ---------- Эндер-столбы (сконцентрированы в центре) ---------- */
     .ender-pillars {
       position: fixed;
       top: 0;
@@ -217,6 +217,13 @@
       border-color: rgba(255, 255, 255, 0.4);
     }
 
+    .candidate-item.voted {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+      opacity: 0.8;
+      cursor: default;
+    }
+
     .candidate-item input[type="radio"] {
       appearance: none;
       -webkit-appearance: none;
@@ -236,6 +243,10 @@
       box-shadow: inset 0 0 0 6px #0a0a0a, 0 0 0 1px #fff;
     }
 
+    .candidate-item.voted input[type="radio"] {
+      display: none;
+    }
+
     .candidate-item label {
       flex: 1;
       font-size: 1.05rem;
@@ -243,6 +254,19 @@
       color: var(--text-primary);
       cursor: pointer;
       letter-spacing: -0.2px;
+    }
+
+    .candidate-item.voted label {
+      cursor: default;
+    }
+
+    .candidate-item .vote-badge {
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 14px;
+      border-radius: 40px;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
     }
 
     /* ---------- Кнопка ---------- */
@@ -342,13 +366,13 @@
 </head>
 <body>
 
-<!-- Фоновые эндер-столбы (генерируются JS) -->
+<!-- Фоновые эндер-столбы (сконцентрированы в центре) -->
 <div class="ender-pillars" id="pillarsContainer"></div>
 
 <div class="poll-wrapper">
   <div class="header">
-    <span class="shield">⚔</span>
-    <h1>Shield Awards</h1>
+    <span class="shield">🐾</span>
+    <h1>Nyash Awards</h1>
     <span class="year">2026</span>
   </div>
 
@@ -374,21 +398,22 @@
     <span class="hint" id="selectedHint">—</span>
   </div>
 
-  <div class="footer">анонимное голосование · локальное хранилище</div>
+  <div class="footer">анонимное голосование · один голос в номинации</div>
 </div>
 
 <script>
   // ============================================================
-  //  1. Генерация эндер-столбов (16 штук)
+  //  1. Генерация эндер-столбов (сконцентрированы в центре)
   // ============================================================
   (function createPillars() {
     const container = document.getElementById('pillarsContainer');
-    const count = 16;
+    const count = 18;
     for (let i = 0; i < count; i++) {
       const pillar = document.createElement('div');
       pillar.className = 'pillar';
-      const left = Math.random() * 100;
-      const height = 25 + Math.random() * 75;
+      // Центрируем: left от 20% до 80%
+      const left = 15 + Math.random() * 70; // 15-85%
+      const height = 30 + Math.random() * 70;
       const width = 1.5 + Math.random() * 3;
       const delay = (Math.random() * 6).toFixed(2);
       const duration = 3 + Math.random() * 5;
@@ -402,7 +427,7 @@
   })();
 
   // ============================================================
-  //  2. НОМИНАЦИИ (14 штук, без стримера)
+  //  2. НОМИНАЦИИ (14 штук)
   // ============================================================
   const NOMINATIONS = [
     {
@@ -492,13 +517,17 @@
   ];
 
   // ============================================================
-  //  3. Логика голосования (без отображения результатов)
+  //  3. Логика голосования (одноразово)
   // ============================================================
   let currentNomIndex = 0;
   let selectedCandidateId = null;
-  let votes = {};
-  const STORAGE_KEY = 'shield_awards_votes_anon';
+  let votes = {};             // { nomId: [число голосов] }
+  let userVotes = {};         // { nomId: индекс_выбранного_кандидата } – для отслеживания, за кого проголосовал пользователь
 
+  const STORAGE_KEY_VOTES = 'nyash_votes';
+  const STORAGE_KEY_USER = 'nyash_user_votes';
+
+  // DOM элементы
   const nomTitle = document.getElementById('nomTitle');
   const nomSub = document.getElementById('nomSub');
   const candidatesContainer = document.getElementById('candidatesContainer');
@@ -509,12 +538,13 @@
   const statusText = document.getElementById('statusText');
   const selectedHint = document.getElementById('selectedHint');
 
-  // Загрузка / сохранение
-  function loadVotes() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
+  // Загрузка данных
+  function loadData() {
+    // Загрузка голосов (суммарных)
+    const storedVotes = localStorage.getItem(STORAGE_KEY_VOTES);
+    if (storedVotes) {
       try {
-        const parsed = JSON.parse(stored);
+        const parsed = JSON.parse(storedVotes);
         let valid = true;
         for (const nom of NOMINATIONS) {
           if (!Array.isArray(parsed[nom.id]) || parsed[nom.id].length !== nom.candidates.length) {
@@ -522,17 +552,42 @@
             break;
           }
         }
-        if (valid) { votes = parsed; return; }
+        if (valid) { votes = parsed; }
       } catch (e) {}
     }
-    votes = {};
-    for (const nom of NOMINATIONS) {
-      votes[nom.id] = new Array(nom.candidates.length).fill(0);
+    if (!votes || Object.keys(votes).length === 0) {
+      votes = {};
+      for (const nom of NOMINATIONS) {
+        votes[nom.id] = new Array(nom.candidates.length).fill(0);
+      }
     }
-    saveVotes();
+
+    // Загрузка пользовательских голосов
+    const storedUser = localStorage.getItem(STORAGE_KEY_USER);
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        // Проверим, что ключи соответствуют номинациям
+        let valid = true;
+        for (const nom of NOMINATIONS) {
+          if (parsed[nom.id] !== undefined && (typeof parsed[nom.id] !== 'number' || parsed[nom.id] < 0 || parsed[nom.id] >= nom.candidates.length)) {
+            valid = false;
+            break;
+          }
+        }
+        if (valid) { userVotes = parsed; }
+      } catch (e) {}
+    }
+    if (!userVotes || Object.keys(userVotes).length === 0) {
+      userVotes = {};
+      // Не заполняем, только при голосовании
+    }
+    saveData();
   }
-  function saveVotes() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY_VOTES, JSON.stringify(votes));
+    localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(userVotes));
   }
 
   function getCurrentNom() { return NOMINATIONS[currentNomIndex]; }
@@ -541,93 +596,156 @@
     return votes[nom.id] || new Array(nom.candidates.length).fill(0);
   }
 
-  // Отрисовка (без баров и процентов)
+  // Проверка, голосовал ли пользователь в текущей номинации
+  function hasUserVoted() {
+    const nom = getCurrentNom();
+    return userVotes[nom.id] !== undefined && userVotes[nom.id] !== null;
+  }
+
+  // Получить индекс выбранного пользователем кандидата (если голосовал)
+  function getUserVoteIndex() {
+    const nom = getCurrentNom();
+    return userVotes[nom.id];
+  }
+
+  // Отрисовка
   function render() {
     const nom = getCurrentNom();
+    const currentVotes = getCurrentVotes();
+    const userVoted = hasUserVoted();
+    const userChoice = userVoted ? getUserVoteIndex() : null;
+
     nomTitle.textContent = nom.title;
     nomSub.textContent = nom.subtitle;
     nomCounter.textContent = `${currentNomIndex + 1} / ${NOMINATIONS.length}`;
     prevNomBtn.disabled = (currentNomIndex === 0);
     nextNomBtn.disabled = (currentNomIndex === NOMINATIONS.length - 1);
 
-    // Кандидаты
+    // Сброс выбора, если пользователь уже голосовал – скрываем радио
+    selectedCandidateId = null; // сбрасываем, потом установим только если можно
+
     candidatesContainer.innerHTML = '';
     nom.candidates.forEach((candidate, idx) => {
       const isSelected = (selectedCandidateId === idx);
+      const isVoted = userVoted && (userChoice === idx);
       const item = document.createElement('div');
-      item.className = `candidate-item${isSelected ? ' selected' : ''}`;
+      item.className = `candidate-item${isSelected ? ' selected' : ''}${isVoted ? ' voted' : ''}`;
 
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = 'candidate';
-      radio.value = idx;
-      radio.checked = isSelected;
-      radio.id = `cand_${idx}`;
-
-      const label = document.createElement('label');
-      label.htmlFor = `cand_${idx}`;
-      label.textContent = candidate;
-
-      item.appendChild(radio);
-      item.appendChild(label);
-
-      item.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'INPUT') {
-          radio.checked = true;
-          const ev = new Event('change', { bubbles: true });
-          radio.dispatchEvent(ev);
+      if (isVoted) {
+        // Если уже проголосовали за этого кандидата – показываем бейдж
+        const badge = document.createElement('span');
+        badge.className = 'vote-badge';
+        badge.textContent = '✓ Ваш голос';
+        // Добавим радио? Нет, прячем.
+        const label = document.createElement('label');
+        label.textContent = candidate;
+        item.appendChild(label);
+        item.appendChild(badge);
+        // Делаем неактивным
+        item.style.cursor = 'default';
+      } else {
+        // Обычный вариант с радио
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'candidate';
+        radio.value = idx;
+        radio.checked = isSelected;
+        radio.id = `cand_${idx}`;
+        // Если пользователь уже голосовал – блокируем радио
+        if (userVoted) {
+          radio.disabled = true;
         }
-      });
 
-      radio.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-          item.classList.add('selected');
-          selectedCandidateId = idx;
-          selectedHint.textContent = `✅ «${candidate}»`;
-          voteBtn.disabled = false;
-          statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
+        const label = document.createElement('label');
+        label.htmlFor = `cand_${idx}`;
+        label.textContent = candidate;
+
+        item.appendChild(radio);
+        item.appendChild(label);
+
+        if (!userVoted) {
+          // Клик по строке только если не проголосовал
+          item.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'INPUT' && !userVoted) {
+              radio.checked = true;
+              const ev = new Event('change', { bubbles: true });
+              radio.dispatchEvent(ev);
+            }
+          });
+
+          radio.addEventListener('change', (e) => {
+            if (e.target.checked && !userVoted) {
+              document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
+              item.classList.add('selected');
+              selectedCandidateId = idx;
+              selectedHint.textContent = `✅ «${candidate}»`;
+              voteBtn.disabled = false;
+              statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
+            }
+          });
+        } else {
+          // Если уже проголосовал – радио отключено, ничего не делаем
+          radio.disabled = true;
         }
-      });
+      }
 
       candidatesContainer.appendChild(item);
     });
 
-    // Статус
-    if (selectedCandidateId === null) {
+    // Если пользователь уже голосовал в этой номинации
+    if (userVoted) {
+      const chosenName = nom.candidates[userChoice];
       voteBtn.disabled = true;
-      selectedHint.textContent = '—';
-      statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
+      selectedHint.textContent = `🔒 Вы уже проголосовали за «${chosenName}»`;
+      statusText.textContent = '✅ Ваш голос учтён. Вы не можете изменить выбор.';
+      // Скрываем radio (уже скрыты через класс .voted)
     } else {
-      voteBtn.disabled = false;
-      statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
+      // Не голосовал
+      if (selectedCandidateId === null) {
+        voteBtn.disabled = true;
+        selectedHint.textContent = '—';
+        statusText.textContent = '💡 Выберите кандидата и нажмите «Голосовать»';
+      } else {
+        voteBtn.disabled = false;
+        statusText.textContent = '📌 Выбран кандидат. Нажмите «Голосовать»';
+      }
     }
+
+    saveData();
   }
 
   // Голосование
   function handleVote() {
     if (selectedCandidateId === null) return;
     const nom = getCurrentNom();
+    if (hasUserVoted()) {
+      // Уже проголосовал – не даём повторно
+      statusText.textContent = '⚠️ Вы уже проголосовали в этой номинации!';
+      return;
+    }
+
+    // Сохраняем голос в общую статистику
     const currentVotes = votes[nom.id];
     if (!currentVotes) return;
     currentVotes[selectedCandidateId] += 1;
 
-    // Сброс выбора
+    // Сохраняем выбор пользователя
+    userVotes[nom.id] = selectedCandidateId;
+
+    // Сбрасываем выбор
     selectedCandidateId = null;
     document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
     document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
-    voteBtn.disabled = true;
-    selectedHint.textContent = '—';
-    statusText.textContent = '✅ Голос учтён! Выберите другого кандидата или переключите номинацию.';
 
-    saveVotes();
-    render(); // перерисовываем, чтобы обновить статус и список
+    saveData();
+    render(); // перерисовываем с новым состоянием
   }
 
   // Навигация
   function goToNom(index) {
     if (index < 0 || index >= NOMINATIONS.length) return;
     currentNomIndex = index;
+    // Сбрасываем выделение, но если пользователь уже голосовал – всё равно отобразится
     selectedCandidateId = null;
     document.querySelectorAll('input[name="candidate"]').forEach(r => r.checked = false);
     document.querySelectorAll('.candidate-item').forEach(el => el.classList.remove('selected'));
@@ -638,7 +756,7 @@
   }
 
   function init() {
-    loadVotes();
+    loadData();
     currentNomIndex = 0;
     selectedCandidateId = null;
     render();
