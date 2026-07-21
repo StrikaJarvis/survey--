@@ -7,9 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
+    /* ====== СТИЛИ (те же, что были) ====== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg: #0a0a0a;
       --card-bg: rgba(16, 16, 20, 0.88);
@@ -21,7 +22,6 @@
       --radius-sm: 40px;
       --transition: 0.25s ease;
     }
-
     body {
       background: var(--bg);
       min-height: 100vh;
@@ -34,8 +34,6 @@
       position: relative;
       overflow-x: hidden;
     }
-
-    /* Эндер-столбы (в центре) */
     .ender-pillars {
       position: fixed;
       top: 0;
@@ -63,8 +61,6 @@
       0% { opacity: 0.25; filter: brightness(0.5); }
       100% { opacity: 0.9; filter: brightness(1.3); }
     }
-
-    /* Карточка */
     .poll-wrapper {
       position: relative;
       z-index: 1;
@@ -78,8 +74,6 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.8);
       border: 1px solid var(--border-light);
     }
-
-    /* Шапка */
     .header {
       display: flex;
       align-items: center;
@@ -100,15 +94,12 @@
       margin-left: auto;
       border: 1px solid var(--border-light);
     }
-
-    /* Шаги */
     .step {
       display: none;
       animation: fadeIn 0.4s ease;
     }
     .step.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
     .step-title {
       font-size: 1.5rem;
       font-weight: 700;
@@ -116,8 +107,6 @@
       border-left: 4px solid rgba(255,255,255,0.3);
       padding-left: 16px;
     }
-
-    /* Форма регистрации */
     .form-group {
       margin-bottom: 20px;
     }
@@ -148,93 +137,23 @@
       font-size: 0.85rem;
       margin-top: 4px;
     }
-
-    /* Опрос */
-    .nomination-item {
-      margin-bottom: 32px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border-light);
-    }
-    .nomination-item:last-child { border-bottom: none; }
-    .nomination-item .nom-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .nomination-item .nom-sub {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-    }
-
-    .candidate-options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .candidate-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-      border-radius: 40px;
-      background: rgba(255,255,255,0.03);
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .candidate-option:hover { background: rgba(255,255,255,0.07); }
-    .candidate-option input[type="radio"] {
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: transparent;
-      transition: 0.15s;
-    }
-    .candidate-option input[type="radio"]:checked {
-      border-color: #fff;
-      background: #fff;
-      box-shadow: inset 0 0 0 5px #0a0a0a, 0 0 0 1px #fff;
-    }
-    .candidate-option label { flex: 1; cursor: pointer; }
-
-    .custom-answer {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-      border-radius: 40px;
-      background: rgba(255,255,255,0.03);
-    }
-    .custom-answer input[type="text"] {
-      flex: 1;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--border-light);
-      padding: 6px 0;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.95rem;
-    }
-    .custom-answer input[type="text"]:focus {
-      outline: none;
-      border-bottom-color: rgba(255,255,255,0.5);
-    }
-    .custom-answer .custom-label {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-
-    .nomination-status {
-      font-size: 0.85rem;
+    .form-group .hint {
       color: var(--text-muted);
-      margin-top: 6px;
+      font-size: 0.85rem;
+      margin-top: 4px;
     }
-
-    /* Кнопки */
+    .code-display {
+      background: rgba(255,255,255,0.04);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: #fff;
+      margin: 12px 0;
+    }
     .btn {
       border: none;
       padding: 14px 36px;
@@ -270,19 +189,94 @@
       border-color: rgba(255,255,255,0.3);
     }
     .btn-sm { padding: 10px 20px; font-size: 0.85rem; }
-    .btn-icon {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-      font-family: inherit;
-      padding: 4px 8px;
+    .nomination-item {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
     }
-    .btn-icon:hover { color: #fff; }
-
-    /* Финал */
+    .nomination-item:last-child { border-bottom: none; }
+    .nomination-item .nom-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .nomination-item .nom-sub {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .candidate-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .candidate-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.03);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .candidate-option:hover { background: rgba(255,255,255,0.07); }
+    .candidate-option input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: transparent;
+      transition: 0.15s;
+    }
+    .candidate-option input[type="radio"]:checked {
+      border-color: #fff;
+      background: #fff;
+      box-shadow: inset 0 0 0 5px #0a0a0a, 0 0 0 1px #fff;
+    }
+    .candidate-option label { flex: 1; cursor: pointer; }
+    .custom-answer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.03);
+    }
+    .custom-answer input[type="text"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-light);
+      padding: 6px 0;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    .custom-answer input[type="text"]:focus {
+      outline: none;
+      border-bottom-color: rgba(255,255,255,0.5);
+    }
+    .custom-answer .custom-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .nomination-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .mt-20 { margin-top: 20px; }
     .final-message {
       text-align: center;
       padding: 30px 0;
@@ -290,8 +284,6 @@
     .final-message .big-icon { font-size: 4rem; }
     .final-message h2 { font-size: 2rem; margin: 16px 0; }
     .final-message p { color: var(--text-secondary); }
-
-    /* Админ-панель (стильная) */
     .admin-panel {
       margin-top: 30px;
       border-top: 1px solid var(--border-light);
@@ -316,14 +308,12 @@
       background: rgba(255,255,255,0.04);
       color: #fff;
     }
-
     .admin-content {
       display: none;
       margin-top: 20px;
       text-align: left;
     }
     .admin-content.active { display: block; }
-
     .admin-login {
       display: flex;
       gap: 12px;
@@ -345,7 +335,6 @@
     }
     .admin-login input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
     .admin-login .error { color: #ff6b6b; font-size: 0.85rem; }
-
     .admin-dashboard {
       display: none;
       background: rgba(0,0,0,0.3);
@@ -354,7 +343,6 @@
       border: 1px solid var(--border-light);
     }
     .admin-dashboard.active { display: block; }
-
     .admin-dashboard h3 {
       font-weight: 600;
       color: var(--text-secondary);
@@ -389,11 +377,6 @@
       margin-top: 16px;
       flex-wrap: wrap;
     }
-
-    .mt-20 { margin-top: 20px; }
-    .mb-10 { margin-bottom: 10px; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-
     @media (max-width: 600px) {
       .poll-wrapper { padding: 24px 16px; }
       .header h1 { font-size: 1.5rem; }
@@ -428,10 +411,28 @@
       <input type="email" id="playerEmail" placeholder="example@mail.com" />
       <div class="error" id="emailError"></div>
     </div>
-    <button class="btn btn-primary" id="startSurveyBtn">Начать опрос →</button>
+    <button class="btn btn-primary" id="getCodeBtn">Получить код →</button>
   </div>
 
-  <!-- ШАГ 2: Опрос -->
+  <!-- ШАГ 2: Подтверждение -->
+  <div class="step" id="stepVerify">
+    <div class="step-title">🔑 Подтверждение</div>
+    <p style="color: var(--text-secondary); margin-bottom: 16px;">Введите код, отправленный на вашу почту</p>
+    <div class="form-group">
+      <label>Код из письма</label>
+      <input type="text" id="verifyCode" placeholder="Введите 6-значный код" maxlength="6" inputmode="numeric" />
+      <div class="error" id="codeError"></div>
+      <div class="hint" id="codeHint"></div>
+    </div>
+    <div id="demoCodeBlock" style="display: none; background: rgba(255,255,255,0.04); padding: 12px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); text-align: center; margin-bottom: 16px;">
+      <span style="color: var(--text-muted);">Демо-режим: ваш код</span>
+      <div style="font-size: 2rem; font-weight: 700; letter-spacing: 8px; color: #fff; margin-top: 4px;" id="demoCodeDisplay">------</div>
+    </div>
+    <button class="btn btn-primary" id="verifyBtn">Подтвердить</button>
+    <button class="btn btn-secondary" id="backToRegisterBtn" style="margin-left: 12px;">Назад</button>
+  </div>
+
+  <!-- ШАГ 3: Опрос -->
   <div class="step" id="stepSurvey">
     <div class="step-title">📋 Опрос</div>
     <div id="surveyContainer"></div>
@@ -441,7 +442,7 @@
     </div>
   </div>
 
-  <!-- ШАГ 3: Финал -->
+  <!-- ШАГ 4: Финал -->
   <div class="step" id="stepFinal">
     <div class="final-message">
       <div class="big-icon">🎉</div>
@@ -450,7 +451,7 @@
     </div>
   </div>
 
-  <!-- Админ-панель (стильная) -->
+  <!-- Админ-панель -->
   <div class="admin-panel">
     <button class="admin-toggle" id="adminToggleBtn">🔐 Админ-панель</button>
     <div class="admin-content" id="adminContent">
@@ -478,6 +479,16 @@
 
 <script>
   // =============================================================
+  //  EMAILJS – ВСЕ КЛЮЧИ УЖЕ ВСТАВЛЕНЫ
+  // =============================================================
+  const EMAILJS_CONFIG = {
+    USE_EMAILJS: true,
+    SERVICE_ID: 'service_nnyjzgy',
+    TEMPLATE_ID: 'template_tpjpo6c',   // ваш Template ID
+    USER_ID: 'sCSwstC3SHqXGkniw'       // ваш Public Key
+  };
+
+  // =============================================================
   //  1. Генерация эндер-столбов
   // =============================================================
   (function createPillars() {
@@ -501,7 +512,7 @@
   })();
 
   // =============================================================
-  //  2. Данные номинаций (14 штук)
+  //  2. Данные номинаций (14)
   // =============================================================
   const NOMINATIONS = [
     { id: 'best_player', title: '🏅 Лучший игрок сезона', subtitle: 'Кто показал наилучшую игру?', candidates: ['Алексей_99', 'Vortex', 'ShadowMaster', 'CrafterPro'] },
@@ -521,22 +532,33 @@
   ];
 
   // =============================================================
-  //  3. Состояние
+  //  3. Состояние приложения
   // =============================================================
-  const ADMIN_PASSWORD = 'admin123'; // смените на свой
-
+  const ADMIN_PASSWORD = 'admin123';
   let currentPlayer = null;
   let allPlayers = [];
-  let currentStep = 'register';
+  let pendingNick = '';
+  let pendingEmail = '';
+  let generatedCode = '';
+  let codeVerified = false;
 
+  // DOM
   const stepRegister = document.getElementById('stepRegister');
+  const stepVerify = document.getElementById('stepVerify');
   const stepSurvey = document.getElementById('stepSurvey');
   const stepFinal = document.getElementById('stepFinal');
   const playerNick = document.getElementById('playerNick');
   const playerEmail = document.getElementById('playerEmail');
   const nickError = document.getElementById('nickError');
   const emailError = document.getElementById('emailError');
-  const startBtn = document.getElementById('startSurveyBtn');
+  const getCodeBtn = document.getElementById('getCodeBtn');
+  const verifyCode = document.getElementById('verifyCode');
+  const codeError = document.getElementById('codeError');
+  const codeHint = document.getElementById('codeHint');
+  const demoCodeBlock = document.getElementById('demoCodeBlock');
+  const demoCodeDisplay = document.getElementById('demoCodeDisplay');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const backToRegisterBtn = document.getElementById('backToRegisterBtn');
   const surveyContainer = document.getElementById('surveyContainer');
   const progressText = document.getElementById('progressText');
   const submitBtn = document.getElementById('submitSurveyBtn');
@@ -581,13 +603,137 @@
   function showStep(step) {
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
     if (step === 'register') stepRegister.classList.add('active');
+    else if (step === 'verify') stepVerify.classList.add('active');
     else if (step === 'survey') stepSurvey.classList.add('active');
     else if (step === 'final') stepFinal.classList.add('active');
-    currentStep = step;
   }
 
   // =============================================================
-  //  4. Рендеринг опроса
+  //  4. Генерация и отправка кода
+  // =============================================================
+  function generateCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  async function sendCode(email, nick, code) {
+    if (EMAILJS_CONFIG.USE_EMAILJS) {
+      try {
+        await emailjs.init(EMAILJS_CONFIG.USER_ID);
+        const params = {
+          to_email: email,
+          to_name: nick,
+          code: code,
+          from_name: 'Nyash Awards'
+        };
+        await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, params);
+        return true;
+      } catch (err) {
+        console.error('EmailJS error:', err);
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  // =============================================================
+  //  5. Обработчики регистрации и кода
+  // =============================================================
+  getCodeBtn.addEventListener('click', async function() {
+    const nick = playerNick.value.trim();
+    const email = playerEmail.value.trim();
+    let valid = true;
+    nickError.textContent = '';
+    emailError.textContent = '';
+
+    if (!nick) {
+      nickError.textContent = 'Введите ник';
+      valid = false;
+    }
+    if (!email) {
+      emailError.textContent = 'Введите почту';
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      emailError.textContent = 'Введите корректную почту (например, name@domain.com)';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const existing = findPlayerByNickOrEmail(nick, email);
+    if (existing) {
+      if (existing.completed) {
+        alert('Вы уже проходили опрос!');
+        currentPlayer = existing;
+        saveCurrentPlayer();
+        showStep('final');
+        return;
+      } else {
+        const idx = allPlayers.findIndex(p => p.nick === existing.nick && p.email === existing.email);
+        if (idx !== -1) allPlayers.splice(idx, 1);
+        saveAllPlayers();
+      }
+    }
+
+    pendingNick = nick;
+    pendingEmail = email;
+    generatedCode = generateCode();
+
+    const sent = await sendCode(email, nick, generatedCode);
+    if (!sent && EMAILJS_CONFIG.USE_EMAILJS) {
+      alert('Не удалось отправить код. Проверьте настройки EmailJS.');
+      return;
+    }
+
+    if (!EMAILJS_CONFIG.USE_EMAILJS) {
+      demoCodeBlock.style.display = 'block';
+      demoCodeDisplay.textContent = generatedCode;
+      codeHint.textContent = '📨 (демо) Код отправлен на экран, введите его ниже';
+    } else {
+      demoCodeBlock.style.display = 'none';
+      codeHint.textContent = '✉️ Код отправлен на вашу почту';
+    }
+
+    showStep('verify');
+    verifyCode.value = '';
+    codeError.textContent = '';
+  });
+
+  verifyBtn.addEventListener('click', function() {
+    const entered = verifyCode.value.trim();
+    if (!entered) {
+      codeError.textContent = 'Введите код';
+      return;
+    }
+    if (entered === generatedCode) {
+      codeVerified = true;
+      currentPlayer = {
+        nick: pendingNick,
+        email: pendingEmail,
+        answers: {},
+        completed: false,
+        verified: true
+      };
+      allPlayers.push(currentPlayer);
+      saveAllPlayers();
+      saveCurrentPlayer();
+      showStep('survey');
+      renderSurvey();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      codeError.textContent = 'Неверный код. Попробуйте ещё раз.';
+    }
+  });
+
+  backToRegisterBtn.addEventListener('click', function() {
+    showStep('register');
+    codeError.textContent = '';
+    verifyCode.value = '';
+    demoCodeBlock.style.display = 'none';
+  });
+
+  // =============================================================
+  //  6. Рендеринг опроса
   // =============================================================
   function renderSurvey() {
     if (!currentPlayer) return;
@@ -595,7 +741,7 @@
     let html = '';
     let answeredCount = 0;
 
-    NOMINATIONS.forEach((nom, idx) => {
+    NOMINATIONS.forEach((nom) => {
       const answer = answers[nom.id] || null;
       const isAnswered = answer !== null;
       if (isAnswered) answeredCount++;
@@ -603,7 +749,6 @@
       html += `<div class="nomination-item" data-nom-id="${nom.id}">`;
       html += `<div class="nom-title">${nom.title}</div>`;
       html += `<div class="nom-sub">${nom.subtitle}</div>`;
-
       html += `<div class="candidate-options">`;
       nom.candidates.forEach(cand => {
         const checked = (answer && answer.type === 'candidate' && answer.value === cand) ? 'checked' : '';
@@ -615,7 +760,6 @@
         `;
       });
       html += `</div>`;
-
       const customVal = (answer && answer.type === 'custom') ? answer.value : '';
       html += `
         <div class="custom-answer">
@@ -623,7 +767,6 @@
           <input type="text" class="custom-input" data-nom="${nom.id}" placeholder="Напишите свой ответ" value="${customVal}" />
         </div>
       `;
-
       html += `<div class="nomination-status">${isAnswered ? '✅ Отвечено' : '⏳ Ожидает ответа'}</div>`;
       html += `</div>`;
     });
@@ -632,7 +775,6 @@
     progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
     submitBtn.disabled = (answeredCount < NOMINATIONS.length);
 
-    // События
     document.querySelectorAll('.candidate-option input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
         const nomId = this.dataset.nom;
@@ -708,7 +850,7 @@
   }
 
   // =============================================================
-  //  5. Завершение опроса
+  //  7. Завершение опроса
   // =============================================================
   function finishSurvey() {
     if (!currentPlayer) return;
@@ -728,8 +870,10 @@
     showStep('final');
   }
 
+  submitBtn.addEventListener('click', finishSurvey);
+
   // =============================================================
-  //  6. Админ-панель (стильная)
+  //  8. Админ-панель
   // =============================================================
   let adminLoggedIn = false;
 
@@ -798,8 +942,31 @@
     adminToggleBtn.textContent = '🔐 Админ-панель';
   }
 
+  adminToggleBtn.addEventListener('click', function() {
+    const isActive = adminContent.classList.toggle('active');
+    if (isActive) {
+      adminToggleBtn.textContent = '🔒 Скрыть админ-панель';
+      if (!adminLoggedIn) {
+        adminLogin.style.display = 'flex';
+        adminDashboard.classList.remove('active');
+      } else {
+        adminLogin.style.display = 'none';
+        adminDashboard.classList.add('active');
+        renderAdminTable();
+      }
+    } else {
+      adminToggleBtn.textContent = '🔐 Админ-панель';
+      adminLogout();
+    }
+  });
+
+  adminLoginBtn.addEventListener('click', adminLoginHandler);
+  adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminLoginHandler(); });
+  adminLogoutBtn.addEventListener('click', adminLogout);
+  exportJsonBtn.addEventListener('click', exportJson);
+
   // =============================================================
-  //  7. Инициализация
+  //  9. Инициализация
   // =============================================================
   function initApp() {
     loadAllPlayers();
@@ -808,97 +975,22 @@
     if (currentPlayer) {
       if (currentPlayer.completed) {
         showStep('final');
-      } else {
+      } else if (currentPlayer.verified) {
         showStep('survey');
         renderSurvey();
-        // Прокручиваем к началу опроса
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        localStorage.removeItem('nyash_current_player');
+        currentPlayer = null;
+        showStep('register');
       }
     } else {
       showStep('register');
     }
 
-    // --- Регистрация ---
-    startBtn.addEventListener('click', function() {
-      const nick = playerNick.value.trim();
-      const email = playerEmail.value.trim();
-      let valid = true;
-      nickError.textContent = '';
-      emailError.textContent = '';
-
-      if (!nick) {
-        nickError.textContent = 'Введите ник';
-        valid = false;
-      }
-      if (!email) {
-        emailError.textContent = 'Введите почту';
-        valid = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        emailError.textContent = 'Введите корректную почту (например, name@domain.com)';
-        valid = false;
-      }
-
-      if (!valid) return;
-
-      const existing = findPlayerByNickOrEmail(nick, email);
-      if (existing) {
-        if (existing.completed) {
-          alert('Вы уже проходили опрос!');
-          currentPlayer = existing;
-          saveCurrentPlayer();
-          showStep('final');
-          return;
-        } else {
-          currentPlayer = existing;
-          saveCurrentPlayer();
-          showStep('survey');
-          renderSurvey();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          return;
-        }
-      }
-
-      currentPlayer = {
-        nick: nick,
-        email: email,
-        answers: {},
-        completed: false
-      };
-      allPlayers.push(currentPlayer);
-      saveAllPlayers();
-      saveCurrentPlayer();
-
-      showStep('survey');
-      renderSurvey();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // --- Завершение ---
-    submitBtn.addEventListener('click', finishSurvey);
-
-    // --- Админ-панель ---
-    adminToggleBtn.addEventListener('click', function() {
-      const isActive = adminContent.classList.toggle('active');
-      if (isActive) {
-        adminToggleBtn.textContent = '🔒 Скрыть админ-панель';
-        if (!adminLoggedIn) {
-          adminLogin.style.display = 'flex';
-          adminDashboard.classList.remove('active');
-        } else {
-          adminLogin.style.display = 'none';
-          adminDashboard.classList.add('active');
-          renderAdminTable();
-        }
-      } else {
-        adminToggleBtn.textContent = '🔐 Админ-панель';
-        adminLogout();
-      }
-    });
-
-    adminLoginBtn.addEventListener('click', adminLoginHandler);
-    adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminLoginHandler(); });
-    adminLogoutBtn.addEventListener('click', adminLogout);
-    exportJsonBtn.addEventListener('click', exportJson);
+    if (EMAILJS_CONFIG.USE_EMAILJS) {
+      emailjs.init(EMAILJS_CONFIG.USER_ID);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', initApp);
