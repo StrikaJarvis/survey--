@@ -270,31 +270,57 @@
       border-color: rgba(255,255,255,0.3);
     }
     .btn-sm { padding: 10px 20px; font-size: 0.85rem; }
-
-    /* Админ-панель */
-    .admin-panel {
-      margin-top: 30px;
-      border-top: 1px solid var(--border-light);
-      padding-top: 20px;
-    }
-    .admin-panel .admin-toggle {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .admin-panel .admin-toggle button {
+    .btn-icon {
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      text-decoration: underline;
+      transition: var(--transition);
       font-family: inherit;
+      padding: 4px 8px;
     }
-    .admin-panel .admin-toggle button:hover { color: #fff; }
+    .btn-icon:hover { color: #fff; }
+
+    /* Финал */
+    .final-message {
+      text-align: center;
+      padding: 30px 0;
+    }
+    .final-message .big-icon { font-size: 4rem; }
+    .final-message h2 { font-size: 2rem; margin: 16px 0; }
+    .final-message p { color: var(--text-secondary); }
+
+    /* Админ-панель (стильная) */
+    .admin-panel {
+      margin-top: 30px;
+      border-top: 1px solid var(--border-light);
+      padding-top: 16px;
+      text-align: center;
+    }
+    .admin-panel .admin-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: var(--transition);
+      padding: 6px 12px;
+      border-radius: 40px;
+    }
+    .admin-panel .admin-toggle:hover {
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+    }
 
     .admin-content {
       display: none;
       margin-top: 20px;
+      text-align: left;
     }
     .admin-content.active { display: block; }
 
@@ -303,30 +329,51 @@
       gap: 12px;
       align-items: center;
       flex-wrap: wrap;
+      background: rgba(255,255,255,0.02);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
     }
     .admin-login input {
+      flex: 1;
       padding: 10px 16px;
       border-radius: var(--radius-sm);
       background: rgba(255,255,255,0.05);
       border: 1px solid var(--border-light);
       color: #fff;
       font-family: inherit;
-      flex: 1;
     }
     .admin-login input:focus { outline: none; border-color: rgba(255,255,255,0.4); }
+    .admin-login .error { color: #ff6b6b; font-size: 0.85rem; }
 
+    .admin-dashboard {
+      display: none;
+      background: rgba(0,0,0,0.3);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      border: 1px solid var(--border-light);
+    }
+    .admin-dashboard.active { display: block; }
+
+    .admin-dashboard h3 {
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
     .admin-table-wrap {
       overflow-x: auto;
-      margin-top: 16px;
+      margin-top: 8px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     th, td {
-      padding: 10px 12px;
-      border: 1px solid var(--border-light);
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.06);
       text-align: left;
       vertical-align: top;
     }
@@ -343,16 +390,6 @@
       flex-wrap: wrap;
     }
 
-    /* Финал */
-    .final-message {
-      text-align: center;
-      padding: 30px 0;
-    }
-    .final-message .big-icon { font-size: 4rem; }
-    .final-message h2 { font-size: 2rem; margin: 16px 0; }
-    .final-message p { color: var(--text-secondary); }
-
-    /* Прочее */
     .mt-20 { margin-top: 20px; }
     .mb-10 { margin-bottom: 10px; }
     .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
@@ -410,25 +447,22 @@
       <div class="big-icon">🎉</div>
       <h2>Вы приглашены на Nyash Awards!</h2>
       <p>Спасибо за ваши ответы. Ждём вас на церемонии!</p>
-      <button class="btn btn-secondary mt-20" id="resetAllBtn">Пройти опрос заново (сброс)</button>
     </div>
   </div>
 
-  <!-- Админ-панель -->
+  <!-- Админ-панель (стильная) -->
   <div class="admin-panel">
-    <div class="admin-toggle">
-      <button id="adminToggleBtn">🔐 Админ-панель</button>
-    </div>
+    <button class="admin-toggle" id="adminToggleBtn">🔐 Админ-панель</button>
     <div class="admin-content" id="adminContent">
       <div class="admin-login" id="adminLogin">
         <input type="password" id="adminPassword" placeholder="Введите пароль" />
         <button class="btn btn-secondary btn-sm" id="adminLoginBtn">Войти</button>
-        <span id="adminLoginError" style="color: #ff6b6b; font-size: 0.85rem;"></span>
+        <span class="error" id="adminLoginError"></span>
       </div>
-      <div id="adminDashboard" style="display: none;">
-        <h3 style="margin: 16px 0 8px;">Список участников</h3>
+      <div class="admin-dashboard" id="adminDashboard">
+        <h3>📋 Список участников</h3>
         <div class="admin-table-wrap">
-          <table id="adminTable">
+          <table>
             <thead><tr><th>Ник</th><th>Почта</th><th>Ответы</th></tr></thead>
             <tbody id="adminTableBody"></tbody>
           </table>
@@ -444,7 +478,7 @@
 
 <script>
   // =============================================================
-  //  1. Генерация эндер-столбов (центрированы)
+  //  1. Генерация эндер-столбов
   // =============================================================
   (function createPillars() {
     const container = document.getElementById('pillarsContainer');
@@ -487,15 +521,14 @@
   ];
 
   // =============================================================
-  //  3. Состояние приложения
+  //  3. Состояние
   // =============================================================
-  const ADMIN_PASSWORD = 'admin123'; // ← смените на свой
+  const ADMIN_PASSWORD = 'admin123'; // смените на свой
 
-  let currentPlayer = null;          // { nick, email, answers: { nomId: { type, value } } }
-  let allPlayers = [];              // массив объектов { nick, email, answers }
-  let currentStep = 'register';     // 'register' | 'survey' | 'final'
+  let currentPlayer = null;
+  let allPlayers = [];
+  let currentStep = 'register';
 
-  // DOM-элементы
   const stepRegister = document.getElementById('stepRegister');
   const stepSurvey = document.getElementById('stepSurvey');
   const stepFinal = document.getElementById('stepFinal');
@@ -507,7 +540,6 @@
   const surveyContainer = document.getElementById('surveyContainer');
   const progressText = document.getElementById('progressText');
   const submitBtn = document.getElementById('submitSurveyBtn');
-  const resetAllBtn = document.getElementById('resetAllBtn');
   const adminToggleBtn = document.getElementById('adminToggleBtn');
   const adminContent = document.getElementById('adminContent');
   const adminLogin = document.getElementById('adminLogin');
@@ -519,31 +551,22 @@
   const exportJsonBtn = document.getElementById('exportJsonBtn');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
-  // =============================================================
-  //  4. Загрузка / сохранение данных
-  // =============================================================
+  // Загрузка / сохранение
   function loadAllPlayers() {
     const stored = localStorage.getItem('nyash_all_players');
     if (stored) {
       try { allPlayers = JSON.parse(stored); } catch(e) { allPlayers = []; }
-    } else {
-      allPlayers = [];
-    }
+    } else { allPlayers = []; }
   }
-
   function saveAllPlayers() {
     localStorage.setItem('nyash_all_players', JSON.stringify(allPlayers));
   }
-
   function loadCurrentPlayer() {
     const stored = localStorage.getItem('nyash_current_player');
     if (stored) {
       try { currentPlayer = JSON.parse(stored); } catch(e) { currentPlayer = null; }
-    } else {
-      currentPlayer = null;
-    }
+    } else { currentPlayer = null; }
   }
-
   function saveCurrentPlayer() {
     if (currentPlayer) {
       localStorage.setItem('nyash_current_player', JSON.stringify(currentPlayer));
@@ -551,15 +574,10 @@
       localStorage.removeItem('nyash_current_player');
     }
   }
-
-  // Проверка, существует ли игрок с таким ником или почтой
   function findPlayerByNickOrEmail(nick, email) {
     return allPlayers.find(p => p.nick.toLowerCase() === nick.toLowerCase() || p.email.toLowerCase() === email.toLowerCase());
   }
 
-  // =============================================================
-  //  5. Переключение шагов
-  // =============================================================
   function showStep(step) {
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
     if (step === 'register') stepRegister.classList.add('active');
@@ -569,7 +587,7 @@
   }
 
   // =============================================================
-  //  6. Рендеринг опроса
+  //  4. Рендеринг опроса
   // =============================================================
   function renderSurvey() {
     if (!currentPlayer) return;
@@ -586,7 +604,6 @@
       html += `<div class="nom-title">${nom.title}</div>`;
       html += `<div class="nom-sub">${nom.subtitle}</div>`;
 
-      // Варианты кандидатов
       html += `<div class="candidate-options">`;
       nom.candidates.forEach(cand => {
         const checked = (answer && answer.type === 'candidate' && answer.value === cand) ? 'checked' : '';
@@ -599,7 +616,6 @@
       });
       html += `</div>`;
 
-      // Свой вариант
       const customVal = (answer && answer.type === 'custom') ? answer.value : '';
       html += `
         <div class="custom-answer">
@@ -616,41 +632,33 @@
     progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
     submitBtn.disabled = (answeredCount < NOMINATIONS.length);
 
-    // --- Привязка событий ---
-    // Радио-кнопки: при выборе очищаем custom поле для этой номинации
+    // События
     document.querySelectorAll('.candidate-option input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', function() {
         const nomId = this.dataset.nom;
         const customInput = document.querySelector(`.custom-input[data-nom="${nomId}"]`);
         if (this.checked) {
           customInput.value = '';
-          // Сохраняем ответ
           saveAnswer(nomId, { type: 'candidate', value: this.value });
         }
       });
     });
 
-    // Кастомные поля: при вводе снимаем выбор радио
     document.querySelectorAll('.custom-input').forEach(input => {
       input.addEventListener('input', function() {
         const nomId = this.dataset.nom;
         const radios = document.querySelectorAll(`input[name="nom_${nomId}"]`);
         radios.forEach(r => r.checked = false);
-        // Сохраняем ответ, если поле не пустое
         const val = this.value.trim();
         if (val) {
           saveAnswer(nomId, { type: 'custom', value: val });
         } else {
-          // Если пустое – удаляем ответ
           removeAnswer(nomId);
         }
-        // Обновляем статусы
         updateSurveyStatus();
       });
     });
 
-    // Дополнительно: при клике на радио уже сохраняется, но нам нужно обновить статус
-    // Обновим статус при загрузке
     updateSurveyStatus();
   }
 
@@ -659,7 +667,6 @@
     if (!currentPlayer.answers) currentPlayer.answers = {};
     currentPlayer.answers[nomId] = answer;
     saveCurrentPlayer();
-    // Также обновляем запись в allPlayers (если существует)
     const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
     if (idx !== -1) {
       allPlayers[idx].answers = currentPlayer.answers;
@@ -691,22 +698,17 @@
     });
     progressText.textContent = `${answeredCount} / ${NOMINATIONS.length}`;
     submitBtn.disabled = (answeredCount < NOMINATIONS.length);
-    // Обновляем статусы под каждой номинацией
     document.querySelectorAll('.nomination-item').forEach(item => {
       const nomId = item.dataset.nomId;
       const statusDiv = item.querySelector('.nomination-status');
       if (statusDiv) {
-        if (answers[nomId]) {
-          statusDiv.textContent = '✅ Отвечено';
-        } else {
-          statusDiv.textContent = '⏳ Ожидает ответа';
-        }
+        statusDiv.textContent = answers[nomId] ? '✅ Отвечено' : '⏳ Ожидает ответа';
       }
     });
   }
 
   // =============================================================
-  //  7. Завершение опроса
+  //  5. Завершение опроса
   // =============================================================
   function finishSurvey() {
     if (!currentPlayer) return;
@@ -716,10 +718,8 @@
       alert('Ответьте на все вопросы!');
       return;
     }
-    // Помечаем игрока как завершившего опрос
     currentPlayer.completed = true;
     saveCurrentPlayer();
-    // Обновляем в allPlayers
     const idx = allPlayers.findIndex(p => p.nick === currentPlayer.nick && p.email === currentPlayer.email);
     if (idx !== -1) {
       allPlayers[idx].completed = true;
@@ -729,25 +729,7 @@
   }
 
   // =============================================================
-  //  8. Сброс (начать заново)
-  // =============================================================
-  function resetAll() {
-    if (confirm('Вы уверены? Все ваши ответы будут удалены.')) {
-      localStorage.removeItem('nyash_current_player');
-      currentPlayer = null;
-      // Не удаляем allPlayers, чтобы администратор видел все ответы
-      // Но можно удалить текущего игрока из allPlayers (по желанию)
-      showStep('register');
-      // Очищаем поля
-      playerNick.value = '';
-      playerEmail.value = '';
-      nickError.textContent = '';
-      emailError.textContent = '';
-    }
-  }
-
-  // =============================================================
-  //  9. Админ-панель
+  //  6. Админ-панель (стильная)
   // =============================================================
   let adminLoggedIn = false;
 
@@ -760,9 +742,7 @@
     }
     allPlayers.forEach(p => {
       const tr = document.createElement('tr');
-      // Ник и почта
       tr.innerHTML = `<td>${p.nick}</td><td>${p.email}</td>`;
-      // Ответы
       let answersHtml = '';
       if (p.answers) {
         NOMINATIONS.forEach(nom => {
@@ -800,7 +780,7 @@
     if (pass === ADMIN_PASSWORD) {
       adminLoggedIn = true;
       adminLogin.style.display = 'none';
-      adminDashboard.style.display = 'block';
+      adminDashboard.classList.add('active');
       adminLoginError.textContent = '';
       renderAdminTable();
     } else {
@@ -811,7 +791,7 @@
   function adminLogout() {
     adminLoggedIn = false;
     adminLogin.style.display = 'flex';
-    adminDashboard.style.display = 'none';
+    adminDashboard.classList.remove('active');
     adminPassword.value = '';
     adminLoginError.textContent = '';
     adminContent.classList.remove('active');
@@ -819,28 +799,26 @@
   }
 
   // =============================================================
-  //  10. Инициализация приложения
+  //  7. Инициализация
   // =============================================================
   function initApp() {
     loadAllPlayers();
     loadCurrentPlayer();
 
-    // Проверяем, есть ли текущий игрок и завершён ли он
     if (currentPlayer) {
       if (currentPlayer.completed) {
         showStep('final');
       } else {
-        // Проверяем, есть ли у него ответы
         showStep('survey');
         renderSurvey();
+        // Прокручиваем к началу опроса
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else {
       showStep('register');
     }
 
-    // --- Обработчики ---
-
-    // Регистрация
+    // --- Регистрация ---
     startBtn.addEventListener('click', function() {
       const nick = playerNick.value.trim();
       const email = playerEmail.value.trim();
@@ -862,11 +840,8 @@
 
       if (!valid) return;
 
-      // Проверяем, существует ли уже игрок с таким ником или почтой
       const existing = findPlayerByNickOrEmail(nick, email);
       if (existing) {
-        // Если уже есть, но не завершён – загружаем его как текущего
-        // Если завершён – показываем финал
         if (existing.completed) {
           alert('Вы уже проходили опрос!');
           currentPlayer = existing;
@@ -874,16 +849,15 @@
           showStep('final');
           return;
         } else {
-          // Загружаем существующего незавершённого
           currentPlayer = existing;
           saveCurrentPlayer();
           showStep('survey');
           renderSurvey();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }
       }
 
-      // Новый игрок
       currentPlayer = {
         nick: nick,
         email: email,
@@ -896,25 +870,23 @@
 
       showStep('survey');
       renderSurvey();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Завершение опроса
+    // --- Завершение ---
     submitBtn.addEventListener('click', finishSurvey);
 
-    // Сброс
-    resetAllBtn.addEventListener('click', resetAll);
-
-    // Админ-панель: отображение/скрытие
+    // --- Админ-панель ---
     adminToggleBtn.addEventListener('click', function() {
       const isActive = adminContent.classList.toggle('active');
       if (isActive) {
         adminToggleBtn.textContent = '🔒 Скрыть админ-панель';
         if (!adminLoggedIn) {
           adminLogin.style.display = 'flex';
-          adminDashboard.style.display = 'none';
+          adminDashboard.classList.remove('active');
         } else {
           adminLogin.style.display = 'none';
-          adminDashboard.style.display = 'block';
+          adminDashboard.classList.add('active');
           renderAdminTable();
         }
       } else {
@@ -927,11 +899,8 @@
     adminPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') adminLoginHandler(); });
     adminLogoutBtn.addEventListener('click', adminLogout);
     exportJsonBtn.addEventListener('click', exportJson);
-
-    // Если админ уже был залогинен при загрузке (сохраняем состояние в сессии?) – не сохраняем.
   }
 
-  // Запуск
   document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
