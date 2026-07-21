@@ -194,6 +194,13 @@
       font-size: 0.95rem;
     }
     .autocomplete-item:hover, .autocomplete-item.selected { background: rgba(255,255,255,0.08); color: #fff; }
+    .autocomplete-item.top-candidate {
+      color: #ffd700;
+      font-weight: 600;
+    }
+    .autocomplete-item.top-candidate::before {
+      content: '⭐ ';
+    }
 
     /* Радио-кнопки */
     .candidate-options {
@@ -244,9 +251,7 @@
       border-radius: 50%;
       background: #0a0a0a;
     }
-    .candidate-option input[type="radio"]:checked ~ span {
-      color: #fff;
-    }
+    .candidate-option input[type="radio"]:checked ~ span { color: #fff; }
     .candidate-option:has(input[type="radio"]:checked) {
       background: rgba(255,255,255,0.08);
       border-color: rgba(255,255,255,0.2);
@@ -453,26 +458,60 @@
 
 <script>
   // =============================================================
-  //  EMAILJS – ваши ключи (замените при необходимости)
+  //  EMAILJS — ДЕМО-РЕЖИМ ВКЛЮЧЁН (код показывается на экране)
+  //  Для реальной отправки замените false на true
   // =============================================================
   const EMAILJS_CONFIG = {
-    USE_EMAILJS: true,
-    SERVICE_ID: 'service_nnyjzgy',     // замените на ваш
-    TEMPLATE_ID: 'template_tpjpo6c',   // замените на ваш
-    USER_ID: 'sCSwstC3SHqXGkniw'       // замените на ваш
+    USE_EMAILJS: false,
+    SERVICE_ID: 'service_nnyjzgy',
+    TEMPLATE_ID: 'template_tpjpo6c',
+    USER_ID: 'sCSwstC3SHqXGkniw'
   };
 
   // =============================================================
+  //  ЭНДЕР-СТОЛБЫ
+  // =============================================================
+  (function createPillars() {
+    const container = document.getElementById('pillarsContainer');
+    for (let i = 0; i < 18; i++) {
+      const pillar = document.createElement('div');
+      pillar.className = 'pillar';
+      pillar.style.left = (15 + Math.random() * 70) + '%';
+      pillar.style.height = (30 + Math.random() * 70) + '%';
+      pillar.style.width = (1.5 + Math.random() * 3) + 'px';
+      pillar.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
+      pillar.style.animationDuration = (3 + Math.random() * 5) + 's';
+      container.appendChild(pillar);
+    }
+  })();
+
+  // =============================================================
   //  СПИСОК ВСЕХ НИКОВ (для автодополнения)
+  //  + ГЛАВНЫЕ ПРЕТЕНДЕНТЫ ДЛЯ КАЖДОЙ НОМИНАЦИИ
   // =============================================================
   const ALL_NICKS = [
     'Strika_Jarvis', 'Gate_ton', 'Tigr65789', 'livitody', 'meshokdeneg',
     'AppleTob', 'roma_1917', 'blebik❤️', 'Lord15986', 'Mayorcraft',
-    'nevertajm', 'tomatoma', 'Stalker', 'Diller'
+    'nevertajm', 'tomatoma', 'Stalker', 'Diller',
+    'GG_Chaika', 'meshokRoma', 'Piska_mamonta'
   ];
 
+  const TOP_CANDIDATES = {
+    best_player: ['Mayorcraft', 'meshokdeneg', 'blebik❤️', 'Gate_ton', 'livitody'],
+    best_builder: ['meshokdeneg', 'Strika_Jarvis', 'livitody', 'Mayorcraft', 'Gate_ton'],
+    best_pvp: ['blebik❤️', 'Gate_ton', 'Mayorcraft', 'meshokRoma', 'Stalker'],
+    best_admin: ['AppleTob', 'meshokdeneg', 'Mayorcraft', 'Strika_Jarvis', 'Lord15986'],
+    best_pve: ['blebik❤️', 'Gate_ton', 'Stalker', 'tomatoma', 'Mayorcraft'],
+    best_noob: ['tomatoma', 'Stalker', 'Piska_mamonta', 'GG_Chaika', 'Tigr65789'],
+    best_farming: ['Gate_ton', 'tomatoma', 'Stalker', 'livitody', 'blebik❤️'],
+    best_redstone: ['meshokdeneg', 'Strika_Jarvis', 'livitody', 'Mayorcraft', 'Gate_ton'],
+    best_guildmaster: ['meshokdeneg', 'Mayorcraft', 'Lord15986'],
+    best_active: ['blebik❤️', 'meshokdeneg', 'Strika_Jarvis', 'Gate_ton', 'Stalker'],
+    best_troll: ['Gate_ton', 'meshokdeneg', 'AppleTob', 'Mayorcraft', 'Stalker']
+  };
+
   // =============================================================
-  //  НОМИНАЦИИ (15 штук – как в вашем файле)
+  //  15 НОМИНАЦИЙ (все вопросы и варианты ответов)
   // =============================================================
   const NOMINATIONS = [
     { id: 'best_player', title: '🏅 Лучший игрок сезона', subtitle: 'Кто показал наилучшую игру?', type: 'nick' },
@@ -512,22 +551,8 @@
   ];
 
   // =============================================================
-  //  ОСТАЛЬНОЙ КОД (без изменений)
+  //  ОСНОВНАЯ ЛОГИКА (без изменений)
   // =============================================================
-  (function createPillars() {
-    const container = document.getElementById('pillarsContainer');
-    for (let i = 0; i < 18; i++) {
-      const pillar = document.createElement('div');
-      pillar.className = 'pillar';
-      pillar.style.left = (15 + Math.random() * 70) + '%';
-      pillar.style.height = (30 + Math.random() * 70) + '%';
-      pillar.style.width = (1.5 + Math.random() * 3) + 'px';
-      pillar.style.animationDelay = (Math.random() * 6).toFixed(2) + 's';
-      pillar.style.animationDuration = (3 + Math.random() * 5) + 's';
-      container.appendChild(pillar);
-    }
-  })();
-
   const ADMIN_PASSWORD = 'admin123';
   let currentPlayer = null;
   let allPlayers = [];
@@ -726,18 +751,18 @@
     document.querySelectorAll('.nomination-input').forEach(input => {
       const wrapper = input.parentElement;
       const dropdown = wrapper.querySelector('.autocomplete-dropdown');
+      const nomId = input.dataset.nom;
 
       input.addEventListener('input', function() {
         const val = this.value.trim();
-        const nomId = this.dataset.nom;
         if (val) saveAnswer(nomId, { type: 'nick', value: val });
         else removeAnswer(nomId);
         updateSurveyStatus();
-        showAutocomplete(this, dropdown);
+        showAutocomplete(this, dropdown, nomId);
       });
 
       input.addEventListener('focus', function() {
-        showAutocomplete(this, dropdown);
+        showAutocomplete(this, dropdown, nomId);
         activeAutocomplete = { input, dropdown };
       });
 
@@ -759,21 +784,33 @@
     updateSurveyStatus();
   }
 
-  function showAutocomplete(input, dropdown) {
+  function showAutocomplete(input, dropdown, nomId) {
     const val = input.value.toLowerCase().trim();
     dropdown.innerHTML = '';
-    if (!val) { dropdown.classList.remove('active'); return; }
-    const matches = ALL_NICKS.filter(nick => nick.toLowerCase().startsWith(val));
+    
+    let matches;
+    if (!val) {
+      const topNicks = TOP_CANDIDATES[nomId] || [];
+      matches = topNicks.length > 0 ? topNicks : ALL_NICKS;
+    } else {
+      matches = ALL_NICKS.filter(nick => nick.toLowerCase().startsWith(val));
+    }
+    
     if (matches.length === 0) { dropdown.classList.remove('active'); return; }
+
+    const topNicks = TOP_CANDIDATES[nomId] || [];
+    
     matches.forEach(nick => {
       const div = document.createElement('div');
       div.className = 'autocomplete-item';
+      if (!val && topNicks.includes(nick)) {
+        div.classList.add('top-candidate');
+      }
       div.textContent = nick;
       div.addEventListener('mousedown', function(e) {
         e.preventDefault();
         input.value = nick;
         dropdown.classList.remove('active');
-        const nomId = input.dataset.nom;
         saveAnswer(nomId, { type: 'nick', value: nick });
         updateSurveyStatus();
       });
@@ -878,9 +915,12 @@
       currentPlayer = null;
       saveCurrentPlayer();
     }
-    document.cookie = 'nyash_voted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'nyash_voted=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'nyash_voted=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=' + location.hostname;
+    document.cookie = 'nyash_voted=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + location.hostname;
+    localStorage.removeItem('nyash_current_player');
     renderAdminTable();
-    alert(`${nick} удалён. Может голосовать заново.`);
+    alert(`${nick} удалён! Теперь он может зайти заново.`);
   }
 
   function renderAdminTable() {
